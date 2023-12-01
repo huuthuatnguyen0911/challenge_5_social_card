@@ -5,14 +5,14 @@ import { SearchOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button, Flex, Input, Tooltip } from 'antd'
 
 interface Props {
-  openModal: () => void
+  openModal: (action: string, id: string) => void
 }
 
 export default function CreateSearchInput(props: Props) {
   const { openModal } = props
   return (
     <Flex className='' justify='space-between' align='flex-start'>
-      <button className={styles.button_create} id={styles.add_task} onClick={() => openModal()}>
+      <button className={styles.button_create} id={styles.add_task} onClick={() => openModal('add', '')}>
         <svg
           className={styles.icon_create}
           xmlns='http://www.w3.org/2000/svg'

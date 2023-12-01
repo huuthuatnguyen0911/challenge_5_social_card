@@ -39,7 +39,7 @@
   margin-right: 24px;
 }
 .card_body {
-  width: 100%;
+  width: 436px;
   text-align: left;
 
   .card_title {
@@ -62,6 +62,7 @@
     font-style: normal;
     font-weight: 400;
     line-height: 20px;
+    overflow-wrap: break-word;
   }
 }
 
@@ -82,20 +83,6 @@
     cursor: pointer;
   }
 }
-
-// .dropbtn {
-//   background-color: #4CAF50;
-//   color: white;
-//   padding: 16px;
-//   font-size: 16px;
-//   border: none;
-//   cursor: pointer;
-// }
-
-// .dropdown {
-//   position: relative;
-//   display: inline-block;
-// }
 
 .dropdown_content {
   display: none;

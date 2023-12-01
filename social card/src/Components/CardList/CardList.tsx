@@ -1,54 +1,67 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React from 'react'
 import styles from './cardList.module.scss'
-import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons'
 import { Avatar, Card, Col, Row } from 'antd'
 import icon_more from '../../assets/icon_more.svg'
 import icon_heart from '../../assets/icon_heart.svg'
 import icon_comment from '../../assets/icon_comment.svg'
-import { Dropdown, message, Space } from 'antd'
-import type { MenuProps } from 'antd'
+import { Cards } from '~/@type/cards.type'
+import img_no_avt from '../../assets/img_no_avt.svg'
+import icon_heart_handled from '../../assets/icon_heart_handled.svg'
 
-
-export default function CardList() {
+interface Props {
+  cards: Cards[]
+  openModal: (action: string, id: string) => void
+  openDetailCard: (id: string) => void
+  clickReaction: (id: string) => void
+}
+export default function CardList(props: Props) {
+  const { cards, openModal, openDetailCard, clickReaction } = props
   return (
     <div className={styles.cardList}>
       <Row gutter={16}>
-        <Col span={12} className={styles.card}>
-          <div className={styles.card_container}>
-            <div className={styles.card_content}>
-              <img
-                className={styles.img_avatar}
-                alt='example'
-                src='https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png'
-              />
-              <div className={styles.card_body}>
-                <div className={styles.card_title}>Card title</div>
-                <div className={styles.card_description}>This is the description</div>
+        {cards.map((card) => (
+          <Col span={12} className={styles.card} key={card.id}>
+            <div className={styles.card_container}>
+              <div className={styles.card_content}>
+                <img
+                  onClick={() => openDetailCard(card.id)}
+                  className={styles.img_avatar}
+                  alt='example'
+                  src={card.url ? card.url : img_no_avt}
+                />
+                <div className={styles.card_body} onClick={() => openDetailCard(card.id)}>
+                  <div className={styles.card_title}>{card.name}</div>
+                  <div className={styles.card_description}>{card.description}</div>
+                </div>
+                <div className={styles.dropdown} style={{ float: 'right' }}>
+                  <img className={`${styles.icon_more}`} src={icon_more} alt='_blank' />
+                  <div className={styles.dropdown_content}>
+                    <a onClick={() => openModal('edit', card.id)}>Edit</a>
+                    <a onClick={() => openModal('delete', card.id)}>Delete</a>
+                  </div>
+                </div>
               </div>
-              <div className={styles.dropdown} style={{ float: 'right' }}>
-                <img className={`${styles.icon_more}`} src={icon_more} alt='_blank' />
-                <div className={styles.dropdown_content}>
-                  <a href='#'>Edit</a>
-                  <a href='#'>Delete</a>
+              <div className={styles.border_top} onClick={() => openDetailCard(card.id)}></div>
+
+              <div className={styles.card_action}>
+                <div className={styles.card_action_item} style={{ marginRight: 24 }}>
+                  <img
+                    onClick={() => clickReaction(card.id)}
+                    className={styles.card_icon_heart}
+                    src={card.reactions > 0 ? icon_heart_handled : icon_heart}
+                    alt=''
+                  />
+                  <span>{card.reactions}</span>
+                </div>
+
+                <div className={styles.card_action_item} onClick={() => openDetailCard(card.id)}>
+                  <img src={icon_comment} alt='' />
+                  <span style={{ marginRight: 8 }}>{card.comments.length}</span>
                 </div>
               </div>
             </div>
-            <div className={styles.border_top}></div>
-
-            <div className={styles.card_action}>
-              <div className={styles.card_action_item} style={{ marginRight: 24 }}>
-                <img className={styles.card_icon_hea} src={icon_heart} alt='' />
-                <span>12.2k</span>
-              </div>
-
-              <div className={styles.card_action_item}>
-                <img src={icon_comment} alt='' />
-                <span style={{ marginRight: 8 }}>22</span>
-              </div>
-            </div>
-          </div>
-        </Col>
+          </Col>
+        ))}
       </Row>
     </div>
   )
