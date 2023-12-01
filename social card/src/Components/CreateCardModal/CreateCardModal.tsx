@@ -18,11 +18,23 @@ interface Props {
   currentCards: Cards | null
   action: string
   editCard: (name: string, description: string, url: string) => void
-  finishEditCard: () => void
+  finishEditCard: (url: string) => void
   delelteCard: (id: string) => void
+  handleEditImageCard: (url: string) => void
 }
 export default function CreateCardModal(props: Props) {
-  const { isOpen, closeModal, addCards, action, currentCards, editCard, finishEditCard, delelteCard } = props
+  const {
+    isOpen,
+    closeModal,
+    addCards,
+    action,
+    currentCards,
+    editCard,
+    finishEditCard,
+    delelteCard,
+    handleEditImageCard
+  } = props
+
   const [inputValueName, setInputValueName] = useState('')
   const [inputValueDesc, setInputValueDesc] = useState('')
   const [inputValueNameEdit, setInputValueNameEdit] = useState('')
@@ -31,6 +43,7 @@ export default function CreateCardModal(props: Props) {
   const [url, setUrl] = useState('')
 
   const saveImage = async () => {
+    console.log(image)
     const data = new FormData()
     data.append('file', image as File)
     data.append('upload_preset', 'huuthuat')
@@ -86,11 +99,22 @@ export default function CreateCardModal(props: Props) {
     e.preventDefault()
     try {
       if (currentCards) {
-        finishEditCard()
-        setInputValueName('')
-        setInputValueDesc('')
-        setImage(null)
-        closeModal()
+        if (!currentCards.url) {
+          const url = await saveImage()
+          editCard(inputValueNameEdit, inputValueDescEdit, url)
+          finishEditCard(url)
+          setInputValueName('')
+          setInputValueDesc('')
+          setImage(null)
+          closeModal()
+        } else {
+          editCard(inputValueNameEdit, inputValueDescEdit, currentCards.url)
+          finishEditCard(currentCards.url)
+          setInputValueName('')
+          setInputValueDesc('')
+          setImage(null)
+          closeModal()
+        }
       } else {
         const url = await saveImage()
         addCards(inputValueName, inputValueDesc, url)
@@ -105,7 +129,8 @@ export default function CreateCardModal(props: Props) {
   }
 
   const isDisabled: boolean = inputValueName.length === 0 || inputValueDesc.length === 0 || image === null
-  const isDisabledEdit: boolean = inputValueNameEdit.length === 0 || inputValueDescEdit.length === 0
+  const isDisabledEdit: boolean =
+    currentCards?.description.length === 0 || currentCards?.name.length === 0 || (image === null && !currentCards?.url)
   const defaultImage: boolean = (image &&
     image?.size < 1024 * 1024 &&
     ['image/png', 'image/jpeg', 'image/svg+xml'].includes(image.type)) as boolean
@@ -128,6 +153,7 @@ export default function CreateCardModal(props: Props) {
         pauseOnHover
         theme='colored'
       />
+
       {action === 'add' ? (
         <Modal width={594} centered open={isOpen} onCancel={() => closeModal()} closeIcon={false} footer={null}>
           <div className={styles.container}>
@@ -212,7 +238,8 @@ export default function CreateCardModal(props: Props) {
             </form>
           </div>
         </Modal>
-      ) : action === 'edit' ? (
+      ) : // EDIT CARD
+      action === 'edit' ? (
         <Modal
           width={598}
           style={{}}
@@ -238,8 +265,9 @@ export default function CreateCardModal(props: Props) {
                     {currentCards?.url ? (
                       <>
                         <img className={styles.img_upload} src={currentCards?.url} alt='_blank' />
-                        <img className={styles.icon_delete_image} src={icon_delete_image} alt="_blank" />
                       </>
+                    ) : (defaultImage as boolean) ? (
+                      <img className={styles.img_upload} src={image ? URL.createObjectURL(image) : ''} alt='img' />
                     ) : (
                       <>
                         <img className={styles.img_upload} src={img_add} alt='img' />
@@ -248,12 +276,18 @@ export default function CreateCardModal(props: Props) {
                       </>
                     )}
                   </label>
+                  <img
+                    onClick={() => handleEditImageCard(currentCards?.url as string)}
+                    className={styles.icon_delete_image}
+                    src={icon_delete_image}
+                    alt='_blank'
+                  />
                 </div>
 
                 <div className={styles.input_name}>
                   <div className={styles.label_custom}>
                     <label htmlFor=''>Name</label>
-                    <span>{inputValueNameEdit.length}/50</span>
+                    <span>{currentCards?.name.length}/50</span>
                   </div>
 
                   <Input
@@ -274,7 +308,7 @@ export default function CreateCardModal(props: Props) {
                 <div className={styles.input_desc}>
                   <div className={styles.label_custom}>
                     <label htmlFor=''>Description</label>
-                    <span>{inputValueDescEdit.length}/200</span>
+                    <span>{currentCards?.description.length}/200</span>
                   </div>
 
                   <TextArea

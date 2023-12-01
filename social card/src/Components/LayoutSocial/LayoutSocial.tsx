@@ -91,7 +91,7 @@ export default function LayoutSocial() {
       return null
     })
   }
-  const finishEditCard = () => {
+  const finishEditCard = (url: string) => {
     const hanlder = (cardObject: Cards[]) =>
       cardObject.map((card) => {
         if (card.id === currentCards?.id) {
@@ -99,13 +99,12 @@ export default function LayoutSocial() {
             ...card,
             name: currentCards?.name,
             description: currentCards?.description,
-            url: currentCards?.url
+            url: url
           }
         }
         return card
       })
     setCards(hanlder)
-    setCurrentCards(null)
     setDetailCard((prev) => {
       if (prev) {
         return {
@@ -117,6 +116,7 @@ export default function LayoutSocial() {
       }
       return null
     })
+    setCurrentCards(null)
     syncReactToLocal(hanlder)
   }
   const startDeleteCard = (id: string) => {
@@ -167,6 +167,18 @@ export default function LayoutSocial() {
     setDetailCard(null)
     setIsDetailCardOpen(false)
   }
+  const handleEditImageCard = () => {
+    setCurrentCards((prev) => {
+      if (prev) {
+        return {
+          ...prev,
+          url: ''
+        }
+      }
+      return null
+    })
+  }
+
   return (
     <div>
       <HeaderLogo />
@@ -182,6 +194,7 @@ export default function LayoutSocial() {
         editCard={editCard}
         finishEditCard={finishEditCard}
         delelteCard={delelteCard}
+        handleEditImageCard={handleEditImageCard}
       />
       <DetailCard
         openModal={openModal}
