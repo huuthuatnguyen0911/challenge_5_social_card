@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import HeaderLogo from '../HeaderLogo'
 import CreateSearchInput from '../CreateSeachInput'
 import CardList from '../CardList'
@@ -8,11 +8,11 @@ import PaginationFooter from '../PaginationFooter'
 import CreateCardModal from '../CreateCardModal'
 import { Cards } from '~/@type/cards.type'
 import DetailCard from '../DetailCard'
+import {Comment} from '~/@type/comments.type.ts'
 
 interface HandleNewCards {
   (cards: Cards[]): Cards[]
 }
-
 const syncReactToLocal = (HandleNewTodos: HandleNewCards) => {
   const cardString = localStorage.getItem('cards')
   const cardObject: Cards[] = cardString ? JSON.parse(cardString) : []
@@ -27,6 +27,7 @@ export default function LayoutSocial() {
   const [modalAction, setModalAction] = useState('')
   const [isDetailCardOpen, setIsDetailCardOpen] = useState(false)
   const [detailCard, setDetailCard] = useState<Cards | null>(null)
+  const [formComment, setFormComment] = useState(false)
 
   useEffect(() => {
     const cardString = localStorage.getItem('cards')
@@ -34,6 +35,9 @@ export default function LayoutSocial() {
     setCards(cardObject)
   }, [])
 
+  const hanledClickComment = () => {
+    setFormComment(true)
+  }
   const clickReaction = (id: string) => {
     const handler = (cardObject: Cards[]) =>
       cardObject.map((card) => {
@@ -111,7 +115,7 @@ export default function LayoutSocial() {
           ...prev,
           name: currentCards?.name || prev.name,
           description: currentCards?.description || prev.description,
-          url: currentCards?.url || prev.url
+          url: url
         }
       }
       return null
@@ -146,6 +150,7 @@ export default function LayoutSocial() {
   const openModal = (action: string, id: string) => {
     setModalAction(action)
     setIsModalOpen(true)
+    setCurrentCards(null)
     if (action === 'edit') {
       startEditCard(id)
     } else if (action === 'delete') {
@@ -166,6 +171,7 @@ export default function LayoutSocial() {
   const closeDetailCard = () => {
     setDetailCard(null)
     setIsDetailCardOpen(false)
+    setFormComment(false)
   }
   const handleEditImageCard = () => {
     setCurrentCards((prev) => {
@@ -177,6 +183,44 @@ export default function LayoutSocial() {
       }
       return null
     })
+  }
+  const handlePostComment = (name: string, content: string) => {
+    const handler = (cardObject: Cards[]) =>
+      cardObject.map((card) => {
+        if (card.id === detailCard?.id) {
+          return {
+            ...card,
+            comments : [
+              ...card.comments,
+              {
+                id: new Date().toISOString(),
+                name,
+                content,
+                created_at: new Date().toISOString()
+              }
+            ]
+          }
+        }
+        return card
+      })
+      syncReactToLocal(handler)
+      setDetailCard((prev) => {
+        if (prev) {
+          return {
+            ...prev,
+            comments : [
+              {
+                id: new Date().toISOString(),
+                name,
+                content,
+                created_at: new Date().toISOString()
+              },
+              ...prev.comments,
+            ]
+          }
+        }
+        return null
+      })
   }
 
   return (
@@ -203,6 +247,9 @@ export default function LayoutSocial() {
         closeDetailCard={closeDetailCard}
         currentCards={currentCards}
         clickReaction={clickReaction}
+        formComment={formComment}
+        hanledClickComment={hanledClickComment}
+        handlePostComment={handlePostComment}
       />
     </div>
   )

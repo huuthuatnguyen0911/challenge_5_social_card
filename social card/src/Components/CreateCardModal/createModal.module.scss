@@ -10,6 +10,7 @@
   --text-primary-weak: rgba(254, 252, 254, 1);
   --fill-success-default: rgba(48, 164, 108, 1);
   --fill-destructive-default: rgba(229, 72, 77, 1);
+  --background-pop-up: rgba(23, 23, 23, 0.7);
 }
 .container {
   padding: 20px 16px;
@@ -58,13 +59,51 @@
     font-size: 16px;
     font-style: normal;
     font-weight: 500;
-    line-height: 20px; /* 125% */
+    line-height: 20px;
   }
 }
 
 .img_upload {
+  opacity: 1;
   width: 92px;
   height: 92px;
+  border-radius: 8px;
+  background:
+    lightgray 50% / cover no-repeat,
+    #d9d9d9;
+}
+
+.container_hover_image {
+  display: flex;
+  transition: 0.5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 27.4%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+  padding: 36px 19px;
+  border-radius: 8px;
+  cursor: pointer;
+
+  .layout_hover_edit {
+    display: flex;
+    gap: 4px
+  }
+}
+.container_hover_image:hover {
+  opacity: 0.7;
+  background: #3b3b3b;
+
+}
+.text {
+  color: var(--text-gray-weak, #fcfcfc);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
 }
 
 .icon_delete_image {

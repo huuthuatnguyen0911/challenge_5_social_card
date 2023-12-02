@@ -5,6 +5,9 @@
   --text-gray-default-weak: rgba(143, 143, 143, 1);
   --text-primary-weak: rgba(254, 252, 254, 1);
   --fill-primary-default: rgba(142, 78, 198, 1);
+  --fill-white: rgba(255, 255, 255, 1);
+  --stroke-gray-disable: rgba(226, 226, 226, 1);
+  --fill-gray-disable: rgba(237, 237, 237, 1);
 }
 .header_detail {
   padding: 16px;
@@ -114,7 +117,7 @@
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
-  line-height: 20px; /* 125% */
+  line-height: 20px;
 }
 
 .dropdown_content a:hover {
@@ -130,7 +133,16 @@
 }
 
 .footer_btn_comment {
+  width: 100%;
+  margin-left: -24px;
+  border-top: 1px solid var(--stroke-gray-default, #dbdbdb);
   text-align: center;
+  position: absolute;
+  bottom: 0px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  box-shadow: 0px -4px 16px 0px rgba(23, 23, 23, 0.1);
+
   .btn_comment {
     color: var(--text-primary-weak, #fefcfe);
     font-family: Inter;
@@ -142,6 +154,86 @@
     border: none;
     border-radius: 8px;
     background: var(--fill-primary-default, #8e4ec6);
+    cursor: pointer;
+  }
+}
+.form_comment {
+  background: #fff;
+  width: 100%;
+  margin-left: -24px;
+  border-top: 1px solid var(--stroke-gray-default, #dbdbdb);
+  text-align: center;
+  position: absolute;
+  bottom: 0px;
+  padding: 20px 40px;
+  box-shadow: 0px -4px 16px 0px rgba(23, 23, 23, 0.1);
+
+  .checkbox_comment {
+    display: flex;
+    gap: 8px;
+
+    span {
+      color: var(--text-gray-default, #3b3b3b);
+      font-family: Inter;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 20px;
+    }
+  }
+  .input_content {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    .form_comment_input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--stroke-gray-default, #dbdbdb);
+      background: var(--fill-white, #fff);
+      color: var(--text-gray-default-weak, #8f8f8f);
+      font-family: Inter;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 20px;
+    }
+    .form_comment_input:last-child {
+      margin-top: 8px;
+    }
+
+    .form_comment_input_disable {
+      border-radius: var(--xs, 8px);
+      border: 1px solid var(--stroke-gray-disable, #e2e2e2);
+      background: var(--fill-gray-disable, #ededed);
+      cursor: not-allowed;
+    }
+  }
+
+  .btn_comment_disable {
+    padding: 12px 16px;
+    color: var(--text-disable, #9e9e9e);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+
+    border-radius: var(--xs, 8px);
+    border: 1px solid var(--stroke-gray-disable, #e2e2e2);
+    background: var(--fill-gray-disable, #ededed);
+  }
+
+  .btn_comment {
+    padding: 12px 16px;
+    color: var(--text-primary-weak, #FEFCFE);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    border-radius: 8px;
+    background: var(--fill-primary-default, #8E4EC6);
+    border: none;
     cursor: pointer;
   }
 }

@@ -8,6 +8,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Cards } from '~/@type/cards.type'
 import icon_delete_image from '../../assets/icon_delete_image.svg'
+import icon_edit_image_fill from '../../assets/icon_edit_image_fill.svg'
 
 const { TextArea } = Input
 
@@ -100,6 +101,14 @@ export default function CreateCardModal(props: Props) {
     try {
       if (currentCards) {
         if (!currentCards.url) {
+          const url = await saveImage()
+          editCard(inputValueNameEdit, inputValueDescEdit, url)
+          finishEditCard(url)
+          setInputValueName('')
+          setInputValueDesc('')
+          setImage(null)
+          closeModal()
+        } else if (currentCards.url && image) {
           const url = await saveImage()
           editCard(inputValueNameEdit, inputValueDescEdit, url)
           finishEditCard(url)
@@ -248,6 +257,7 @@ export default function CreateCardModal(props: Props) {
           onCancel={() => closeModal()}
           closeIcon={false}
           footer={null}
+          getContainer={() => document.body}
         >
           <div className={styles.container}>
             <div className={styles.modal_title}>Edit Card</div>
@@ -262,9 +272,15 @@ export default function CreateCardModal(props: Props) {
                     style={{ display: 'none' }}
                   />
                   <label className={styles.title_upload} htmlFor='html'>
-                    {currentCards?.url ? (
+                    {currentCards?.url && !image ? (
                       <>
                         <img className={styles.img_upload} src={currentCards?.url} alt='_blank' />
+                        <div className={styles.container_hover_image}>
+                          <div className={styles.layout_hover_edit}>
+                            <img src={icon_edit_image_fill} alt='_blank' />
+                            <span className={styles.text}>Edit</span>
+                          </div>
+                        </div>
                       </>
                     ) : (defaultImage as boolean) ? (
                       <img className={styles.img_upload} src={image ? URL.createObjectURL(image) : ''} alt='img' />
@@ -276,12 +292,18 @@ export default function CreateCardModal(props: Props) {
                       </>
                     )}
                   </label>
-                  <img
-                    onClick={() => handleEditImageCard(currentCards?.url as string)}
-                    className={styles.icon_delete_image}
-                    src={icon_delete_image}
-                    alt='_blank'
-                  />
+                  {currentCards?.url ? (
+                    <>
+                      <img
+                        onClick={() => handleEditImageCard(currentCards?.url as string)}
+                        className={styles.icon_delete_image}
+                        src={icon_delete_image}
+                        alt='_blank'
+                      />
+                    </>
+                  ) : (
+                    <></>
+                  )}
                 </div>
 
                 <div className={styles.input_name}>
