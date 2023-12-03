@@ -124,3 +124,25 @@
 .dropdown:hover .dropbtn {
   background-color: #3e8e41;
 }
+
+.container_no_result {
+  p {
+    margin-top: 4px;
+    color: #000;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 26px;
+  }
+
+  p:nth-child(3) {
+    margin-top: 4px;
+    color: var(--text-gray-default-weak, #8f8f8f);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+  }
+}

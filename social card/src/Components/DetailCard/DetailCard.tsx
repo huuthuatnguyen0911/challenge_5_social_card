@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from 'react'
+import { format, formatDistanceToNow } from 'date-fns'
 import { Button, Drawer, Input } from 'antd'
 import { Cards } from '~/@type/cards.type'
 import styles from './detailCard.module.scss'
@@ -33,7 +34,25 @@ export default function DetailCard(props: Props) {
   const [checked, setChecked] = useState(false)
   const [nameComment, setNameComment] = useState('')
   const [contentComment, setContentComment] = useState('')
+  const isDisable: boolean = (!checked && nameComment.length === 0) || contentComment.length === 0
+  const [currentPage, setCurrentPage] = useState(1)
+  const commentsPerPage = 5
 
+  const indexOfLastComment = currentPage * commentsPerPage
+  const currentComments = detailCard?.comments.slice(0, indexOfLastComment)
+
+  const formatDate = (dateString: string) => {
+    const commentDate = new Date(dateString)
+    const now = new Date()
+
+    const hoursDifference = Math.abs((now.getTime() - commentDate.getTime()) / 36e5)
+
+    if (hoursDifference < 24) {
+      return `${Math.floor(hoursDifference)} hours ago`
+    } else {
+      return format(commentDate, 'dd-MM-yyyy')
+    }
+  }
   const handleChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
     value = value.charAt(0).toUpperCase() + value.slice(1)
@@ -53,19 +72,29 @@ export default function DetailCard(props: Props) {
       if (checked) {
         setNameComment('unknown')
         handlePostComment(nameComment, contentComment)
+        setNameComment('')
+        setContentComment('')
       } else {
         handlePostComment(nameComment, contentComment)
+        setNameComment('')
+        setContentComment('')
       }
     } catch (error) {
       console.log(error)
     }
   }
+  const handleShowMore = () => {
+    setCurrentPage((prevPage) => prevPage + 1)
+  }
 
-  const isDisable: boolean = (!checked && nameComment.length === 0) || contentComment.length === 0
   return (
     <>
       <Drawer width={604} closable={false} onClose={closeDetailCard} open={isDetailCardOpen}>
-        <div className={styles.header_detail}>
+        <div
+          className={`${styles.header_detail} ${
+            !formComment ? styles.margin_comment_btn : styles.margin_comment_form
+          } `}
+        >
           <img
             className={styles.img_avatar_header}
             alt='example'
@@ -99,13 +128,21 @@ export default function DetailCard(props: Props) {
             <span>Comment</span>
             <span className={styles.count_comment}>({detailCard?.comments.length})</span>
           </div>
-          {detailCard?.comments.map((comment, index) => (
+          {currentComments?.map((comment, index) => (
             <div className={styles.list_comment} key={index}>
-              <h4>{comment.name}</h4>
-              <h4>{comment.content}</h4>
-              <h4>{comment.created_at}</h4>
+              <p className={styles.comment_name}>{comment.name}</p>
+              <p className={styles.comment_content}>{comment.content}</p>
+              <p className={styles.comment_create_at}>{formatDate(comment.created_at)}</p>
             </div>
           ))}
+          {(detailCard?.comments.length as number) < 5 ||
+          (currentComments?.length as number) == (detailCard?.comments.length as number) ? (
+            ''
+          ) : (
+            <div className={styles.btn_show_more}>
+              <span onClick={handleShowMore}>More comments</span>
+            </div>
+          )}
         </div>
         {!formComment ? (
           <div className={styles.footer_btn_comment}>

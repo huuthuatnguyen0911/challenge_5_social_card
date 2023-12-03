@@ -8,7 +8,6 @@ import PaginationFooter from '../PaginationFooter'
 import CreateCardModal from '../CreateCardModal'
 import { Cards } from '~/@type/cards.type'
 import DetailCard from '../DetailCard'
-import {Comment} from '~/@type/comments.type.ts'
 
 interface HandleNewCards {
   (cards: Cards[]): Cards[]
@@ -28,6 +27,7 @@ export default function LayoutSocial() {
   const [isDetailCardOpen, setIsDetailCardOpen] = useState(false)
   const [detailCard, setDetailCard] = useState<Cards | null>(null)
   const [formComment, setFormComment] = useState(false)
+  const [searchText, setSearchText] = useState('')
 
   useEffect(() => {
     const cardString = localStorage.getItem('cards')
@@ -190,45 +190,74 @@ export default function LayoutSocial() {
         if (card.id === detailCard?.id) {
           return {
             ...card,
-            comments : [
-              ...card.comments,
-              {
-                id: new Date().toISOString(),
-                name,
-                content,
-                created_at: new Date().toISOString()
-              }
-            ]
-          }
-        }
-        return card
-      })
-      syncReactToLocal(handler)
-      setDetailCard((prev) => {
-        if (prev) {
-          return {
-            ...prev,
-            comments : [
+            comments: [
               {
                 id: new Date().toISOString(),
                 name,
                 content,
                 created_at: new Date().toISOString()
               },
-              ...prev.comments,
+              ...card.comments
             ]
           }
         }
-        return null
+        return card
       })
+    setDetailCard((prev) => {
+      if (prev) {
+        return {
+          ...prev,
+          comments: [
+            {
+              id: new Date().toISOString(),
+              name,
+              content,
+              created_at: new Date().toISOString()
+            },
+            ...prev.comments
+          ]
+        }
+      }
+      return null
+    })
+    syncReactToLocal(handler)
+    setCards(handler)
+  }
+  const handleChangedSearchText = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setSearchText(e.target.value)
+    if (e.target.value === '') {
+      const cardString = localStorage.getItem('cards')
+      const cardObject: Cards[] = cardString ? JSON.parse(cardString) : []
+      setCards(cardObject)
+    }
+  }
+  const seachCard = (cards: Cards[], searchText: string) => {
+    const result = cards.filter((card) => card.name.includes(searchText))
+    setCards(result)
+    if (result.length === 0) {
+      setCards([])
+    }
+    return result
   }
 
   return (
     <div>
       <HeaderLogo />
-      <CreateSearchInput openModal={openModal} />
-      <CardList clickReaction={clickReaction} openModal={openModal} cards={cards} openDetailCard={openDetailCard} />
-      <PaginationFooter />
+      <CreateSearchInput
+        openModal={openModal}
+        seachCard={seachCard}
+        cards={cards}
+        searchText={searchText}
+        handleChangedSearchText={handleChangedSearchText}
+      />
+      <CardList
+        clickReaction={clickReaction}
+        searchText={searchText}
+        openModal={openModal}
+        cards={cards}
+        openDetailCard={openDetailCard}
+      />
+      <PaginationFooter cards={cards} />
       <CreateCardModal
         action={modalAction}
         currentCards={currentCards}
