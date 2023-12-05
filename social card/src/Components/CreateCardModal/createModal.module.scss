@@ -1,19 +1,12 @@
+@use '../Reponsive/breakpoints.scss' as breakpoints;
+@import '../color.scss';
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
-:root {
-  --text-gray-default: rgba(59, 59, 59, 1);
-  --text-primary-default: rgba(142, 78, 198, 1);
-  --stroke-gray-disable: rgba(226, 226, 226, 1);
-  --fill-gray-disable: rgba(237, 237, 237, 1);
-  --text-disable: rgba(158, 158, 158, 1);
-  --stroke-gray-default: rgba(219, 219, 219, 1);
-  --fill-primary-default: rgba(142, 78, 198, 1);
-  --text-primary-weak: rgba(254, 252, 254, 1);
-  --fill-success-default: rgba(48, 164, 108, 1);
-  --fill-destructive-default: rgba(229, 72, 77, 1);
-  --background-pop-up: rgba(23, 23, 23, 0.7);
-}
 .container {
   padding: 20px 16px;
+
+  @include breakpoints.devices(xs) {
+    padding: 0px;
+  }
 }
 
 .modal_title {
@@ -25,6 +18,14 @@
   line-height: 40px;
   text-align: center;
   padding-bottom: 32px;
+
+  @include breakpoints.devices(xs) {
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 30px;
+    padding-bottom: 24px;
+  }
 }
 .modal_title_delete {
   color: var(--text-gray-default, #3b3b3b);
@@ -89,13 +90,12 @@
 
   .layout_hover_edit {
     display: flex;
-    gap: 4px
+    gap: 4px;
   }
 }
 .container_hover_image:hover {
   opacity: 0.7;
   background: #3b3b3b;
-
 }
 .text {
   color: var(--text-gray-weak, #fcfcfc);
@@ -111,6 +111,33 @@
   position: absolute;
   right: 41%;
   top: 18%;
+
+  @include breakpoints.devices(xs) {
+    right: 35%;
+    top: 13%;
+  }
+}
+
+.icon_edit_image_app {
+  display: none;
+
+  @include breakpoints.devices(xs) {
+    display: block;
+    position: absolute;
+    right: 35%;
+    top: 17.5%;
+  }
+}
+
+.icon_question_app {
+  display: none;
+
+  @include breakpoints.devices(xs) {
+    display: block;
+    position: absolute;
+    right: 28%;
+    top: 23.8%;
+  }
 }
 
 .label_custom {
@@ -143,11 +170,15 @@
   padding-top: 32px;
   gap: 16px;
 
+  @include breakpoints.devices(xs) {
+    gap: 12px;
+    padding-top: 24px;
+  }
+
   button,
   span {
     cursor: pointer;
     border-radius: 8px;
-    // max-width: 249px;
   }
   .btn_create {
     border: 1px solid var(--stroke-gray-disable, #e2e2e2);
@@ -160,6 +191,10 @@
     line-height: 20px;
     padding: 12px 98.5px;
     cursor: pointer;
+
+    @include breakpoints.devices(xs) {
+      padding: 12px 55px;
+    }
   }
   .btn_delete {
     border: 1px solid var(--stroke-gray-disable, #e2e2e2);
@@ -184,6 +219,10 @@
     line-height: 20px;
     padding: 12px 98.5px;
     cursor: not-allowed;
+
+    @include breakpoints.devices(xs) {
+      padding: 12px 48px;
+    }
   }
 
   .btn_cancel {
@@ -196,6 +235,10 @@
     padding: 12px 98px;
     border: 1px solid var(--stroke-gray-default, #dbdbdb);
     background: none;
+
+    @include breakpoints.devices(xs) {
+      padding: 12px 47.5px;
+    }
   }
 }
 

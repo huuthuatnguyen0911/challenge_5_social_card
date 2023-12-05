@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from 'react'
-import { format, formatDistanceToNow } from 'date-fns'
-import { Button, Drawer, Input } from 'antd'
+import { ArrowLeftOutlined } from '@ant-design/icons'
+import { format } from 'date-fns'
+import { Drawer, Input } from 'antd'
 import { Cards } from '~/@type/cards.type'
 import styles from './detailCard.module.scss'
 import img_no_avt_detail from '../../assets/img_no_avt_detail.svg'
@@ -19,6 +20,8 @@ interface Props {
   formComment: boolean
   hanledClickComment: () => void
   handlePostComment: (name: string, content: string) => void
+  handleClickHeart: string
+  formatReactions: (reactions: number) => string
 }
 export default function DetailCard(props: Props) {
   const {
@@ -29,7 +32,9 @@ export default function DetailCard(props: Props) {
     clickReaction,
     formComment,
     hanledClickComment,
-    handlePostComment
+    handlePostComment,
+    handleClickHeart,
+    formatReactions
   } = props
   const [checked, setChecked] = useState(false)
   const [nameComment, setNameComment] = useState('')
@@ -69,9 +74,8 @@ export default function DetailCard(props: Props) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-      if (checked) {
-        setNameComment('unknown')
-        handlePostComment(nameComment, contentComment)
+      if (checked === true) {
+        handlePostComment('unknown', contentComment)
         setNameComment('')
         setContentComment('')
       } else {
@@ -89,7 +93,15 @@ export default function DetailCard(props: Props) {
 
   return (
     <>
-      <Drawer width={604} closable={false} onClose={closeDetailCard} open={isDetailCardOpen}>
+      <Drawer
+        {...(window.innerWidth < 400
+          ? { title: 'Details', closable: true, closeIcon: <ArrowLeftOutlined />, width: 400 }
+          : { closable: false })}
+        width={604}
+        onClose={closeDetailCard}
+        open={isDetailCardOpen}
+        zIndex={1000}
+      >
         <div
           className={`${styles.header_detail} ${
             !formComment ? styles.margin_comment_btn : styles.margin_comment_form
@@ -118,10 +130,14 @@ export default function DetailCard(props: Props) {
               <img
                 onClick={() => clickReaction(detailCard?.id as string)}
                 className={styles.card_icon_heart}
-                src={(detailCard?.reactions as number) > 0 ? icon_heart_detail_handled : icon_heart_detail}
+                src={handleClickHeart ? icon_heart_detail_handled : icon_heart_detail}
                 alt=''
               />
-              <span className={styles.count_reaction}>{detailCard?.reactions}</span>
+              <span
+                className={`${styles.count_reaction} ${handleClickHeart === detailCard?.id ? styles.span_purple : ''} `}
+              >
+                {formatReactions(detailCard?.reactions ? detailCard.reactions : 0)}
+              </span>
             </div>
           </div>
           <div className={styles.card_comment}>
@@ -130,7 +146,9 @@ export default function DetailCard(props: Props) {
           </div>
           {currentComments?.map((comment, index) => (
             <div className={styles.list_comment} key={index}>
-              <p className={styles.comment_name}>{comment.name}</p>
+              <p className={`${styles.comment_name} ${comment.name === 'unknown' ? styles.name_unknown : ''}`}>
+                {comment.name}
+              </p>
               <p className={styles.comment_content}>{comment.content}</p>
               <p className={styles.comment_create_at}>{formatDate(comment.created_at)}</p>
             </div>

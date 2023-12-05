@@ -1,12 +1,16 @@
+@use '../Reponsive/breakpoints.scss' as breakpoints;
+@import '../color.scss';
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 :root {
   --text-gray-default: rgba(59, 59, 59, 1);
   --stroke-gray-default: rgba(219, 219, 219, 1);
   --fill-white: rgba(255, 255, 255, 1);
   --background-white: rgba(255, 255, 255, 1);
+  --text-primary-default: rgba(142, 78, 198, 1);
 }
 .cardList {
   margin-top: 32px;
+  margin-bottom: 32px;
 
   .card {
     margin-top: 16px;
@@ -37,6 +41,11 @@
   height: 140px;
   border-radius: 8px;
   margin-right: 24px;
+
+  @include breakpoints.devices(xs) {
+    min-width: 94px;
+    height: 94px;
+  }
 }
 .card_body {
   width: 436px;
@@ -81,6 +90,10 @@
     margin-top: -4px;
     margin-right: 8px;
     cursor: pointer;
+  }
+
+  .span_purple {
+    color: var(--text-primary-default, #8E4EC6);
   }
 }
 

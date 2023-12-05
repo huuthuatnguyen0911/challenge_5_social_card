@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import HeaderLogo from '../HeaderLogo'
 import CreateSearchInput from '../CreateSeachInput'
 import CardList from '../CardList'
-import PaginationFooter from '../PaginationFooter'
 import CreateCardModal from '../CreateCardModal'
 import { Cards } from '~/@type/cards.type'
 import DetailCard from '../DetailCard'
@@ -28,8 +27,14 @@ export default function LayoutSocial() {
   const [detailCard, setDetailCard] = useState<Cards | null>(null)
   const [formComment, setFormComment] = useState(false)
   const [searchText, setSearchText] = useState('')
+  const [handleClickHeart, setHandleClickHeart] = useState('')
+  const [searchHistory, setSearchHistory] = useState<string[]>([])
 
   useEffect(() => {
+    const searchHistories = localStorage.getItem('searchHistory')
+    const searchHistoryObject: string[] = searchHistories ? JSON.parse(searchHistories) : []
+    setSearchHistory(searchHistoryObject)
+    
     const cardString = localStorage.getItem('cards')
     const cardObject: Cards[] = cardString ? JSON.parse(cardString) : []
     setCards(cardObject)
@@ -49,6 +54,10 @@ export default function LayoutSocial() {
         }
         return card
       })
+    setHandleClickHeart(id)
+    setTimeout(() => {
+      setHandleClickHeart('')
+    }, 1000)
     setDetailCard((prev) => {
       if (prev?.id === id) {
         return {
@@ -60,6 +69,13 @@ export default function LayoutSocial() {
     })
     setCards(handler)
     syncReactToLocal(handler)
+  }
+  const formatReactions = (reactions: number) => {
+    if (reactions >= 1000) {
+      const formattedReactions = (reactions / 1000).toFixed(1)
+      return `${formattedReactions}k`
+    }
+    return reactions.toString()
   }
   const addCards = (name: string, description: string, url: string) => {
     const handler = (cardObject: Cards[]) => [card, ...cardObject]
@@ -232,22 +248,35 @@ export default function LayoutSocial() {
     }
   }
   const seachCard = (cards: Cards[], searchText: string) => {
+    // lưu search history vào local storage
+    const searchHistories = localStorage.getItem('searchHistory')
+    if (searchHistories) {
+      const searchHistoryObject: string[] = JSON.parse(searchHistories)
+      searchHistoryObject.push(searchText)
+      localStorage.setItem('searchHistory', JSON.stringify(searchHistoryObject))
+    } else {
+      localStorage.setItem('searchHistory', JSON.stringify([searchText]))
+    }
+    setSearchHistory(JSON.parse(localStorage.getItem('searchHistory') || '[]'))
+
     const result = cards.filter((card) => card.name.includes(searchText))
     setCards(result)
-    if (result.length === 0) {
+    if (result.length === 0 || searchText === '') {
       setCards([])
     }
     return result
   }
 
+
   return (
     <div>
-      <HeaderLogo />
+      <HeaderLogo openModal={openModal} />
       <CreateSearchInput
         openModal={openModal}
         seachCard={seachCard}
         cards={cards}
         searchText={searchText}
+        searchHistory={searchHistory}
         handleChangedSearchText={handleChangedSearchText}
       />
       <CardList
@@ -256,8 +285,9 @@ export default function LayoutSocial() {
         openModal={openModal}
         cards={cards}
         openDetailCard={openDetailCard}
+        handleClickHeart={handleClickHeart}
+        formatReactions={formatReactions}
       />
-      <PaginationFooter cards={cards} />
       <CreateCardModal
         action={modalAction}
         currentCards={currentCards}
@@ -277,8 +307,10 @@ export default function LayoutSocial() {
         currentCards={currentCards}
         clickReaction={clickReaction}
         formComment={formComment}
+        handleClickHeart={handleClickHeart}
         hanledClickComment={hanledClickComment}
         handlePostComment={handlePostComment}
+        formatReactions={formatReactions}
       />
     </div>
   )

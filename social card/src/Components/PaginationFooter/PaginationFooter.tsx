@@ -1,28 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { PaginationProps } from 'antd'
-import { Pagination } from 'antd'
-import styles from './pagination.module.scss'
+import { Pagination, PaginationProps } from 'antd'
+import './pagination.scss'
+import arrowLeftIcon from '../../assets/icon_arrow_left.svg'
+import arrowRightIcon from '../../assets/icon_arrow_right.svg'
 import { Cards } from '~/@type/cards.type'
+import { useState } from 'react'
 
 interface Props {
   cards: Cards[]
 }
 export default function PaginationFooter(props: Props) {
   const { cards } = props
+  const [cardsPerPage, setCardsPerPage] = useState<Cards[]>([])
 
-  const itemRender: PaginationProps['itemRender'] = (_, type, originalElement) => {
-    if (type === 'prev') {
-      return <a>{'<'} Prev</a>
-    }
-    if (type === 'next') {
-      return <a>Next {'>'}</a>
-    }
-    return originalElement
+  const onChange = (page: number, pageSize: number) => {
+    const start = (page - 1) * pageSize
+    const end = start + pageSize
+    setCardsPerPage(cards.slice(start, end))
   }
-
   return (
-    <div className={styles.container}>
-      {cards.length > 1 ? <Pagination total={85} itemRender={itemRender} showSizeChanger /> : ''}
-    </div>
+    <></>
   )
 }

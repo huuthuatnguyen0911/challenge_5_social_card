@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Modal, message, Tooltip } from 'antd'
 import styles from './createModal.module.scss'
 import img_add from '../../assets/img_add_card.svg'
@@ -9,6 +9,8 @@ import 'react-toastify/dist/ReactToastify.css'
 import { Cards } from '~/@type/cards.type'
 import icon_delete_image from '../../assets/icon_delete_image.svg'
 import icon_edit_image_fill from '../../assets/icon_edit_image_fill.svg'
+import icon_edit_image_app from '../../assets/icon_edit_image_app.svg'
+import icon_question_app from '../../assets/icon_question_app.svg'
 
 const { TextArea } = Input
 
@@ -44,7 +46,6 @@ export default function CreateCardModal(props: Props) {
   const [url, setUrl] = useState('')
 
   const saveImage = async () => {
-    console.log(image)
     const data = new FormData()
     data.append('file', image as File)
     data.append('upload_preset', 'huuthuat')
@@ -96,6 +97,11 @@ export default function CreateCardModal(props: Props) {
     setInputValueDescEdit(newValue)
     editCard(currentCards?.name as string, newValue, currentCards?.url as string)
   }
+  // const onChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   console.log(e.target.files ? e.target.files[0] : 'hỏng')
+  //   setImage(e.target.files ? e.target.files[0] : null)
+  // }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
@@ -135,6 +141,9 @@ export default function CreateCardModal(props: Props) {
     } catch (error) {
       console.error('Error while handling form submission:', error)
     }
+  }
+  const hanledEditImageAddCard = () => {
+    setImage(null)
   }
 
   const isDisabled: boolean = inputValueName.length === 0 || inputValueDesc.length === 0 || image === null
@@ -179,15 +188,46 @@ export default function CreateCardModal(props: Props) {
                   />
                   <label className={styles.title_upload} htmlFor='html'>
                     {(defaultImage as boolean) ? (
-                      <img className={styles.img_upload} src={image ? URL.createObjectURL(image) : ''} alt='img' />
+                      <>
+                        <img className={styles.img_upload} src={image ? URL.createObjectURL(image) : ''} alt='img' />
+                        <div className={styles.container_hover_image}>
+                          <div className={styles.layout_hover_edit}>
+                            <img src={icon_edit_image_fill} alt='_blank' />
+                            <span className={styles.text}>Edit</span>
+                          </div>
+                        </div>
+                        <img src={icon_edit_image_app} className={styles.icon_edit_image_app} alt='_blank' />
+                      </>
                     ) : (
-                      <Tooltip placement='right' title="Please use a square image that's less than 5MB.">
-                        <img src={img_add} alt='_blank' />
-                      </Tooltip>
+                      <>
+                        <Tooltip
+                          placement='right'
+                          {...(window.innerWidth > 400
+                            ? { title: "Please use a square image that's less than 5MB." }
+                            : '')}
+                        >
+                          <img src={img_add} alt='_blank' />
+                        </Tooltip>
+                        <br />
+                        <span className={styles.btn_upload}>Upload image</span>
+                      </>
                     )}
-                    <br />
-                    <span className={styles.btn_upload}>Upload image</span>
                   </label>
+                  {(defaultImage as boolean) ? (
+                    <img
+                      onClick={() => hanledEditImageAddCard()}
+                      className={styles.icon_delete_image}
+                      src={icon_delete_image}
+                      alt='_blank'
+                    />
+                  ) : (
+                    <Tooltip
+                      placement='top'
+                      {...(window.innerWidth < 400 ? { title: "Please use a square image that's less than 5MB." } : '')}
+                    >
+                      <img src={icon_question_app} className={styles.icon_question_app} alt='_blank' />
+                    </Tooltip>
+                  )}
                 </div>
 
                 <div className={styles.input_name}>
@@ -197,6 +237,7 @@ export default function CreateCardModal(props: Props) {
                   </div>
 
                   <Input
+                    autoComplete='true'
                     value={inputValueName}
                     status={inputValueName.length == 50 ? 'error' : ''}
                     maxLength={50}
@@ -250,14 +291,14 @@ export default function CreateCardModal(props: Props) {
       ) : // EDIT CARD
       action === 'edit' ? (
         <Modal
-          width={598}
-          style={{}}
+          width={594}
           centered
           open={isOpen}
           onCancel={() => closeModal()}
           closeIcon={false}
           footer={null}
-          getContainer={() => document.body}
+          zIndex={1001}
+          // getContainer={() => document.body}
         >
           <div className={styles.container}>
             <div className={styles.modal_title}>Edit Card</div>
@@ -281,6 +322,7 @@ export default function CreateCardModal(props: Props) {
                             <span className={styles.text}>Edit</span>
                           </div>
                         </div>
+                        <img src={icon_edit_image_app} className={styles.icon_edit_image_app} alt='_blank' />
                       </>
                     ) : (defaultImage as boolean) ? (
                       <img className={styles.img_upload} src={image ? URL.createObjectURL(image) : ''} alt='img' />
@@ -364,7 +406,15 @@ export default function CreateCardModal(props: Props) {
           </div>
         </Modal>
       ) : (
-        <Modal width={594} centered open={isOpen} onCancel={() => closeModal()} closeIcon={false} footer={null}>
+        <Modal
+          width={594}
+          zIndex={1001}
+          centered
+          open={isOpen}
+          onCancel={() => closeModal()}
+          closeIcon={false}
+          footer={null}
+        >
           <div className={styles.container}>
             <div className={styles.modal_title_delete}>Delete card?</div>
             <p className={styles.p_title_delete}>You will not be able to restore the card after taking this action.</p>

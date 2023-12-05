@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import styles from './createsearchInput.module.scss'
 import { SearchOutlined } from '@ant-design/icons'
-import { AutoComplete, Button, Flex, Input } from 'antd'
-import { useState } from 'react'
+import { AutoComplete, Button, Flex, Input, Tag } from 'antd'
 import { Cards } from '~/@type/cards.type'
+import { CloseCircleOutlined } from '@ant-design/icons'
+import { useState } from 'react'
 
 interface Props {
   openModal: (action: string, id: string) => void
@@ -12,17 +14,39 @@ interface Props {
   searchText: string
   seachCard: (cards: Cards[], searchText: string) => Cards[]
   cards: Cards[]
+  searchHistory: string[]
 }
 
 export default function CreateSearchInput(props: Props) {
-  const { openModal, handleChangedSearchText, searchText, seachCard, cards } = props
+  const { openModal, handleChangedSearchText, searchText, seachCard, cards, searchHistory } = props
+  const [options, setOptions] = useState<string[]>([])
 
   const handleSubmut = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     seachCard(cards, searchText)
   }
-  const options = [{ value: 'Burns Bay Road' }, { value: 'Downing Street' }, { value: 'Wall Street' }]
+  const renderOptions = () => {
+    if (!searchText && searchHistory.length !== 0) {
+      // Hiển thị lịch sử tìm kiếm nếu không có nội dung nhập vào
+      return searchHistory.map((item) => ({
+        value: item,
+        label: (
+          <div>
+            <span style={{ marginRight: '8px' }}>{item}</span>
+            <Tag closable onClose={() => false}></Tag>
+          </div>
+        )
+      }))
+    } else if (!searchText && searchHistory.length === 0) {
+      return [{ value: 'no result', label: <div>Abc</div> }]
+    } else if (searchText && options.length === 0) {
+      return [{ value: 'no result', label: <div>No result</div> }]
+    }
 
+    return options.map((name: any) => ({
+      value: name
+    }))
+  }
   return (
     <Flex className='' justify='space-between' align='flex-start'>
       <button className={styles.button_create} id={styles.add_task} onClick={() => openModal('add', '')}>
@@ -45,12 +69,12 @@ export default function CreateSearchInput(props: Props) {
       <div className={styles.search_input}>
         <form onSubmit={handleSubmut}>
           <AutoComplete
-            options={options}
+            options={renderOptions()}
+            maxLength={50}
             filterOption={(inputValue, option) => option!.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
           >
             <Input
               value={searchText}
-              maxLength={50}
               onKeyPress={(event) => {
                 if (/[0-9]/.test(event.key)) {
                   event.preventDefault()
