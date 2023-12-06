@@ -93,7 +93,7 @@
   }
 
   .span_purple {
-    color: var(--text-primary-default, #8E4EC6);
+    color: var(--text-primary-default, #8e4ec6);
   }
 }
 
@@ -157,5 +157,31 @@
     font-style: normal;
     font-weight: 400;
     line-height: 20px;
+  }
+}
+.wrap_pagination {
+  display: flex;
+  margin: 0 auto;
+  text-align: center;
+  justify-content: center;
+}
+.span_pagination {
+  position: absolute;
+  right: 10%;
+  color: var(--text-gray-default, #3b3b3b);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 125% */
+
+  @include breakpoints.devices(xs) {
+    display: none;
+  }
+}
+.input_pagination {
+  max-width: 53px;
+  @include breakpoints.devices(xs) {
+    display: none;
   }
 }

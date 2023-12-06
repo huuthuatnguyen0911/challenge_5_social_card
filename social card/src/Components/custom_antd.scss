@@ -20,4 +20,10 @@ textarea:where(.css-dev-only-do-not-override-2q8sxy).ant-input {
   }
 }
 
+:where(.css-dev-only-do-not-override-2q8sxy).ant-select-single.ant-select-customize-input .ant-select-selector .ant-select-selection-search {
+  @include breakpoints.devices(xs) {
+    margin-left: 17px;
+  }
+}
+
 

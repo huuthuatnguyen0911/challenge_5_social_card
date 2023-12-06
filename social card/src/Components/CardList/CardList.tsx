@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import styles from './cardList.module.scss'
-import { Col, Row, Pagination, PaginationProps } from 'antd'
+import { Col, Row, Pagination, PaginationProps, Input } from 'antd'
 import icon_more from '../../assets/icon_more.svg'
 import icon_heart from '../../assets/icon_heart.svg'
 import icon_comment from '../../assets/icon_comment.svg'
@@ -13,7 +13,7 @@ import arrowLeftIcon from '../../assets/icon_arrow_left.svg'
 import arrowRightIcon from '../../assets/icon_arrow_right.svg'
 import '../custom_antd.scss'
 import '../PaginationFooter/pagination.scss'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 interface Props {
   cards: Cards[]
@@ -26,10 +26,10 @@ interface Props {
 }
 export default function CardList(props: Props) {
   const { cards, openModal, openDetailCard, clickReaction, formatReactions, handleClickHeart } = props
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
+  const [currentPage, setCurrentPage] = useState(1)
+  const pageSize = 10
 
-  const cardsToDisplay = cards.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const cardsToDisplay = cards.slice((currentPage - 1) * pageSize, currentPage * pageSize)
 
   const itemRender: PaginationProps['itemRender'] = (_, type, originalElement) => {
     if (type === 'prev') {
@@ -42,18 +42,20 @@ export default function CardList(props: Props) {
     }
     if (type === 'next') {
       return (
-        <a className='next'>
-          <div>Next</div> <img src={arrowRightIcon} alt='arrow-right-icon' />
-        </a>
+        <>
+          <a className='next'>
+            <div>Next</div> <img src={arrowRightIcon} alt='arrow-right-icon' />
+          </a>
+        </>
       )
     }
+
     return originalElement
   }
 
   const onChange = (page: number, pageSize: number) => {
-    setCurrentPage(page);
+    setCurrentPage(page)
   }
-
 
   return (
     <>
@@ -114,10 +116,13 @@ export default function CardList(props: Props) {
           </Row>
         )}
       </div>
-      <div className='wrap-pagination'>
+      <div className={styles.wrap_pagination}>
         {cards.length > 10 ? (
           <>
             <Pagination
+              showQuickJumper
+              showSizeChanger
+              current={currentPage}
               defaultCurrent={1}
               showLessItems
               total={cards.length}
@@ -125,10 +130,18 @@ export default function CardList(props: Props) {
               onChange={onChange}
               pageSizeOptions={['10', '20', '30', '40']}
             />
-            {/* <div className='pagination-page'>
-      <div className='pagination-text'></div>
-      <input type='text' className='pagination-input' />
-    </div> */}
+            <span className={styles.span_pagination}>
+              Page &nbsp;
+              <Input
+                className={styles.input_pagination}
+                type='number'
+                min={1}
+                max={Math.ceil(cards.length / 10)}
+                value={currentPage}
+                onChange={(e) => setCurrentPage(parseInt(e.target.value, 10))}
+              />
+              &nbsp;of {Math.ceil(cards.length / 10)}
+            </span>
           </>
         ) : (
           ''

@@ -46,3 +46,20 @@
     display: none;
   }
 }
+
+.no_result {
+  padding: 12px 16px;
+}
+
+.matched {
+  color: var(--text-primary-default, #8e4ec6);
+}
+
+.no_result {
+  color: var(--text-gray-default, #3b3b3b);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 125% */
+}

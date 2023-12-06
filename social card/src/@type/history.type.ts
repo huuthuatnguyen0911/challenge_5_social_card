@@ -1,4 +1,4 @@
-export interface History {
-  id: string
-  title: string
+export interface SearchHistory {
+  id: string;
+  searchText: string;
 }

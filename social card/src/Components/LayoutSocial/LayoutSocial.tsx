@@ -7,6 +7,8 @@ import CardList from '../CardList'
 import CreateCardModal from '../CreateCardModal'
 import { Cards } from '~/@type/cards.type'
 import DetailCard from '../DetailCard'
+import { SearchHistory } from '~/@type/history.type'
+import { set } from 'date-fns'
 
 interface HandleNewCards {
   (cards: Cards[]): Cards[]
@@ -28,13 +30,13 @@ export default function LayoutSocial() {
   const [formComment, setFormComment] = useState(false)
   const [searchText, setSearchText] = useState('')
   const [handleClickHeart, setHandleClickHeart] = useState('')
-  const [searchHistory, setSearchHistory] = useState<string[]>([])
+  const [historySearch, sethistorySearch] = useState<SearchHistory[]>([])
 
   useEffect(() => {
-    const searchHistories = localStorage.getItem('searchHistory')
-    const searchHistoryObject: string[] = searchHistories ? JSON.parse(searchHistories) : []
-    setSearchHistory(searchHistoryObject)
-    
+    const historyString = localStorage.getItem('searchHistory')
+    const historyObject: SearchHistory[] = historyString ? JSON.parse(historyString) : []
+    sethistorySearch(historyObject)
+
     const cardString = localStorage.getItem('cards')
     const cardObject: Cards[] = cardString ? JSON.parse(cardString) : []
     setCards(cardObject)
@@ -246,38 +248,49 @@ export default function LayoutSocial() {
       const cardObject: Cards[] = cardString ? JSON.parse(cardString) : []
       setCards(cardObject)
     }
+    console.log(e.target.value)
   }
-  const seachCard = (cards: Cards[], searchText: string) => {
-    // lưu search history vào local storage
-    const searchHistories = localStorage.getItem('searchHistory')
-    if (searchHistories) {
-      const searchHistoryObject: string[] = JSON.parse(searchHistories)
-      searchHistoryObject.push(searchText)
-      localStorage.setItem('searchHistory', JSON.stringify(searchHistoryObject))
-    } else {
-      localStorage.setItem('searchHistory', JSON.stringify([searchText]))
-    }
-    setSearchHistory(JSON.parse(localStorage.getItem('searchHistory') || '[]'))
+  const searchCard = (cards: Cards[], searchText: string) => {
+    if (searchText && !historySearch.some((item) => item.searchText === searchText)) {
+      const historyItem: SearchHistory = {
+        id: new Date().toISOString(),
+        searchText
+      }
+      const newHistorySearch = historySearch.filter((item) => item.searchText !== searchText)
+      sethistorySearch(newHistorySearch)
 
-    const result = cards.filter((card) => card.name.includes(searchText))
+      sethistorySearch((prevHistory) => [historyItem, ...prevHistory])
+      const historyString = localStorage.getItem('searchHistory')
+      const historyObject: SearchHistory[] = historyString ? JSON.parse(historyString) : []
+      const newHistoryObject = [historyItem, ...historyObject]
+      localStorage.setItem('searchHistory', JSON.stringify(newHistoryObject))
+    }
+
+    const result = cards.filter((card) => card.name.toLowerCase().includes(searchText.toLowerCase()))
     setCards(result)
     if (result.length === 0 || searchText === '') {
       setCards([])
     }
+    setSearchText('')
     return result
   }
-
+  const deleteHistorySearch = (searchText: string) => {
+    const updatedHistory = historySearch.filter((item) => item.searchText !== searchText)
+    sethistorySearch(updatedHistory)
+    localStorage.setItem('searchHistory', JSON.stringify(updatedHistory))
+  }
 
   return (
     <div>
       <HeaderLogo openModal={openModal} />
       <CreateSearchInput
         openModal={openModal}
-        seachCard={seachCard}
+        searchCard={searchCard}
         cards={cards}
         searchText={searchText}
-        searchHistory={searchHistory}
+        historySearch={historySearch}
         handleChangedSearchText={handleChangedSearchText}
+        deleteHistorySearch={deleteHistorySearch}
       />
       <CardList
         clickReaction={clickReaction}
