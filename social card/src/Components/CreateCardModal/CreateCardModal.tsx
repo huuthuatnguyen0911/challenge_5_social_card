@@ -41,7 +41,7 @@ export default function CreateCardModal(props: Props) {
   const [inputValueNameEdit, setInputValueNameEdit] = useState('')
   const [inputValueDescEdit, setInputValueDescEdit] = useState('')
   const [image, setImage] = useState<File | null>(null)
-  const [url, setUrl] = useState('')
+  const [, setUrl] = useState('')
 
   const saveImage = async () => {
     const data = new FormData()
