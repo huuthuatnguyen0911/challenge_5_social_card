@@ -2,24 +2,23 @@
 @import '../color.scss';
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 .header_detail {
-  padding: 16px;
   text-align: center;
 
-  @include breakpoints.devices(xs) {
+  @include breakpoints.devices(sm) {
     padding: 0px;
   }
 }
 
 .margin_comment_btn {
-  margin-bottom: 45px;
-  @include breakpoints.devices(xs) {
+  margin-bottom: 69px;
+  @include breakpoints.devices(sm) {
     margin-bottom: 76px;
   }
 }
 
 .margin_comment_form {
-  margin-bottom: 192px;
-  @include breakpoints.devices(xs) {
+  margin-bottom: 215px;
+  @include breakpoints.devices(sm) {
     margin-bottom: 231px;
   }
 }
@@ -29,7 +28,7 @@
   height: 280px;
   border-radius: 8px;
 
-  @include breakpoints.devices(xs) {
+  @include breakpoints.devices(sm) {
     width: 160px;
     height: 160px;
   }
@@ -47,6 +46,9 @@
     font-weight: 700;
     line-height: 40px;
     padding-bottom: 16px;
+    overflow-wrap: break-word;
+    text-overflow: ellipsis;
+
   }
 
   .detail_description {
@@ -58,7 +60,15 @@
     font-weight: 400;
     line-height: 26px;
     max-height: 104px;
+    overflow-wrap: break-word;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    @include breakpoints.devices(sm) {
+      max-height: fit-content;
+    }
   }
+
 }
 
 .border_top {
@@ -112,30 +122,37 @@
   }
 }
 .dropdown {
-  @include breakpoints.devices(xs) {
+  @include breakpoints.devices(sm) {
     position: absolute;
     top: 13px;
     right: 17px;
-    :hover {
-      background: var(--fill-gray-hover-weak, #f3f3f3);
-    }
   }
   img {
     border-radius: 4px;
+    &:hover {
+      background: var(--fill-gray-hover-weak, #f3f3f3);
+      cursor: pointer;
+    }
   }
 }
 .dropdown_content {
   display: none;
   position: absolute;
-  right: 0;
-  right: 20px;
-  top: 40px;
+  right: 54px;
+  top: 64px;
   min-width: 194px;
   z-index: 1;
   border-radius: var(--spacing-2, 8px);
   border: 0.5px solid var(--stroke-gray-default, #dbdbdb);
   background: var(--background-white, #fff);
   box-shadow: 0px 0px 8px 0px rgba(23, 23, 23, 0.2);
+
+  @include breakpoints.devices(sm) {
+    display: none;
+    right: 0px;
+    top: 25px;
+  }
+
 }
 
 .dropdown_content a {
@@ -165,8 +182,8 @@
 
 .footer_btn_comment {
   background: #fff;
-  width: 100%;
-  margin-left: -24px;
+  width: 98%;
+  margin-left: -40px;
   border-top: 1px solid var(--stroke-gray-default, #dbdbdb);
   text-align: center;
   position: absolute;
@@ -174,8 +191,9 @@
   padding-top: 20px;
   padding-bottom: 20px;
   box-shadow: 0px -4px 16px 0px rgba(23, 23, 23, 0.1);
-  @include breakpoints.devices(xs) {
+  @include breakpoints.devices(sm) {
     padding: 16px 17px;
+    margin-left: -16px;
   }
 
   .btn_comment {
@@ -191,16 +209,16 @@
     background: var(--fill-primary-default, #8e4ec6);
     cursor: pointer;
 
-    @include breakpoints.devices(xs) {
-      padding: 12px 119.5px;
+    @include breakpoints.devices(sm) {
+      padding: 12px 116.5px;
       margin-left: -7px;
     }
   }
 }
 .form_comment {
   background: #fff;
-  width: 100%;
-  margin-left: -24px;
+  width: 98%;
+  margin-left: -40px;
   border-top: 1px solid var(--stroke-gray-default, #dbdbdb);
   text-align: center;
   position: absolute;
@@ -208,7 +226,9 @@
   padding: 20px 40px;
   box-shadow: 0px -4px 16px 0px rgba(23, 23, 23, 0.1);
 
-  @include breakpoints.devices(xs) {
+  @include breakpoints.devices(sm) {
+    width: 100%;
+    margin-left: -23px;
     padding: 16px 17px;
   }
 
@@ -246,7 +266,7 @@
     }
 
     .form_comment_input_disable {
-      border-radius: var(--xs, 8px);
+      border-radius: var(--sm, 8px);
       border: 1px solid var(--stroke-gray-disable, #e2e2e2);
       background: var(--fill-gray-disable, #ededed);
       cursor: not-allowed;
@@ -262,7 +282,7 @@
     font-weight: 500;
     line-height: 20px;
 
-    border-radius: var(--xs, 8px);
+    border-radius: var(--sm, 8px);
     border: 1px solid var(--stroke-gray-disable, #e2e2e2);
     background: var(--fill-gray-disable, #ededed);
   }

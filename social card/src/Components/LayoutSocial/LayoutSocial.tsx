@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable prettier/prettier */
 import { useEffect, useState } from 'react'
 import HeaderLogo from '../HeaderLogo'
 import CreateSearchInput from '../CreateSeachInput'
@@ -8,7 +6,7 @@ import CreateCardModal from '../CreateCardModal'
 import { Cards } from '~/@type/cards.type'
 import DetailCard from '../DetailCard'
 import { SearchHistory } from '~/@type/history.type'
-import { set } from 'date-fns'
+import { cardListDefault } from '~/api/cartListdefault'
 
 interface HandleNewCards {
   (cards: Cards[]): Cards[]
@@ -38,8 +36,12 @@ export default function LayoutSocial() {
     sethistorySearch(historyObject)
 
     const cardString = localStorage.getItem('cards')
-    const cardObject: Cards[] = cardString ? JSON.parse(cardString) : []
-    setCards(cardObject)
+    if (!cardString) {
+      setCards(cardListDefault)
+    } else {
+      const cardObject: Cards[] = cardString ? JSON.parse(cardString) : []
+      setCards(cardObject)
+    }
   }, [])
 
   const hanledClickComment = () => {

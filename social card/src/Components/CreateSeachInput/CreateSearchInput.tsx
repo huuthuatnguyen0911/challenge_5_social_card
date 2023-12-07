@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import styles from './createsearchInput.module.scss'
 import { SearchOutlined, CloseOutlined } from '@ant-design/icons'
 import { AutoComplete, Button, Flex, Input } from 'antd'
@@ -26,7 +24,7 @@ export default function CreateSearchInput(props: Props) {
     searchCard(cards, searchText)
   }
   const renderOption = (inputValue: any, option: any) => {
-    const startIdx = option.value.toUpperCase().indexOf(inputValue.toUpperCase())
+    const startIdx = option.value.toLowerCase().indexOf(inputValue.toLowerCase())
     const endIdx = startIdx + inputValue.length
 
     return (
@@ -62,7 +60,7 @@ export default function CreateSearchInput(props: Props) {
           <AutoComplete
             options={historySearch.slice(0, 5).map((item) => ({ value: item.searchText }))}
             maxLength={50}
-            filterOption={(inputValue, option) => option!.value.indexOf(inputValue) !== -1}
+            filterOption={(inputValue, option) => option!.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
             notFoundContent={<span className={styles.no_result}>No result</span>}
             optionRender={(option) => {
               return (
@@ -85,7 +83,7 @@ export default function CreateSearchInput(props: Props) {
             }}
           >
             <Input
-              {...(window.innerWidth < 400 ? { prefix: <SearchOutlined /> } : { prefix: null })}
+              {...(window.innerWidth < 600 ? { prefix: <SearchOutlined style={{marginInlineEnd:8, fontSize:20}} /> } : { prefix: null })}
               value={searchText}
               onKeyPress={(event) => {
                 if (/[0-9]/.test(event.key)) {
@@ -93,6 +91,7 @@ export default function CreateSearchInput(props: Props) {
                 }
               }}
               className={styles.input}
+              maxLength={50}
               style={{ width: 364, height: 44, padding: 12 }}
               placeholder='Search..'
               onChange={handleChangedSearchText}
@@ -101,8 +100,8 @@ export default function CreateSearchInput(props: Props) {
           <Button
             htmlType='submit'
             className={styles.button_search}
-            style={{ width: 44, height: 44 }}
-            icon={<SearchOutlined style={{}} className={styles.icon_search} />}
+            style={{ width: 'auto', height: 44 }}
+            icon={<SearchOutlined style={{padding:12, fontSize:20}} className={styles.icon_search} />}
           />
         </form>
       </div>

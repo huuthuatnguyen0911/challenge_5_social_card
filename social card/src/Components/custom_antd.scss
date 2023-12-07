@@ -1,29 +1,58 @@
 @use './Reponsive/breakpoints.scss' as breakpoints;
 @import './color.scss';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 :where(.css-dev-only-do-not-override-2q8sxy).ant-col-12 {
-  @include breakpoints.devices(xs) {
+  @include breakpoints.devices(sm) {
     max-width: 100%;
   }
 }
 
 :where(.css-dev-only-do-not-override-2q8sxy).ant-modal .ant-modal-content {
-  @include breakpoints.devices(xs) {
+  @include breakpoints.devices(sm) {
     padding: 24px;
     border-radius: 4px;
   }
 }
 
 textarea:where(.css-dev-only-do-not-override-2q8sxy).ant-input {
-  @include breakpoints.devices(xs) {
+  @include breakpoints.devices(sm) {
     height: 156px !important;
   }
 }
 
-:where(.css-dev-only-do-not-override-2q8sxy).ant-select-single.ant-select-customize-input .ant-select-selector .ant-select-selection-search {
-  @include breakpoints.devices(xs) {
+:where(.css-dev-only-do-not-override-2q8sxy).ant-select-single.ant-select-customize-input
+  .ant-select-selector
+  .ant-select-selection-search {
+  @include breakpoints.devices(sm) {
     margin-left: 17px;
   }
 }
 
+:where(.css-dev-only-do-not-override-2q8sxy).ant-modal .ant-modal-content {
+  padding: 40px;
+  border-radius: 4px;
+  background: var(--fill-white, #fff);
 
+  @include breakpoints.devices(sm) {
+    padding: 24px;
+  }
+}
+
+:where(.css-dev-only-do-not-override-2q8sxy).ant-drawer .ant-drawer-body {
+  padding: 40px;
+
+  @include breakpoints.devices(sm) {
+    padding: 24px 17px;
+  }
+}
+
+:where(.css-dev-only-do-not-override-2q8sxy).ant-drawer .ant-drawer-header {
+  padding: 12px 17px;
+}
+
+
+// css input type = checkbox
+#checkbox_1 {
+  accent-color: rgba(142, 78, 198, 1);
+}

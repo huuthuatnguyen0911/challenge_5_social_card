@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import styles from './cardList.module.scss'
 import { Col, Row, Pagination, PaginationProps, Input } from 'antd'
 import icon_more from '../../assets/icon_more.svg'
@@ -13,7 +11,7 @@ import arrowLeftIcon from '../../assets/icon_arrow_left.svg'
 import arrowRightIcon from '../../assets/icon_arrow_right.svg'
 import '../custom_antd.scss'
 import '../PaginationFooter/pagination.scss'
-import { Fragment, useEffect, useState } from 'react'
+import { useState } from 'react'
 
 interface Props {
   cards: Cards[]
@@ -53,7 +51,7 @@ export default function CardList(props: Props) {
     return originalElement
   }
 
-  const onChange = (page: number, pageSize: number) => {
+  const onChange = (page: number) => {
     setCurrentPage(page)
   }
 
@@ -100,7 +98,7 @@ export default function CardList(props: Props) {
                         src={handleClickHeart === card.id ? icon_heart_handled : icon_heart}
                         alt=''
                       />
-                      <span className={handleClickHeart === card.id ? styles.span_purple : ''}>
+                      <span className={handleClickHeart === card.id ? styles.span_purple : card.reactions > 0 ? styles.span_purple : ''}>
                         {formatReactions(card.reactions)}
                       </span>
                     </div>

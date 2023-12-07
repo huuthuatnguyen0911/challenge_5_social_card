@@ -2,9 +2,7 @@
 @import '../color.scss';
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 .container {
-  padding: 20px 16px;
-
-  @include breakpoints.devices(xs) {
+  @include breakpoints.devices(sm) {
     padding: 0px;
   }
 }
@@ -19,7 +17,7 @@
   text-align: center;
   padding-bottom: 32px;
 
-  @include breakpoints.devices(xs) {
+  @include breakpoints.devices(sm) {
     font-size: 24px;
     font-style: normal;
     font-weight: 600;
@@ -36,6 +34,13 @@
   line-height: 40px;
   text-align: center;
   padding-bottom: 16px;
+
+  @include breakpoints.devices(sm) {
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 30px;
+  }
 }
 
 .p_title_delete {
@@ -49,6 +54,7 @@
 }
 
 .content_upload {
+  margin-bottom: 12px;
   text-align: center;
 
   .btn_upload {
@@ -79,7 +85,7 @@
   transition: 0.5s ease;
   opacity: 0;
   position: absolute;
-  top: 27.4%;
+  top: 27%;
   left: 50%;
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
@@ -112,7 +118,7 @@
   right: 41%;
   top: 18%;
 
-  @include breakpoints.devices(xs) {
+  @include breakpoints.devices(sm) {
     right: 35%;
     top: 13%;
   }
@@ -121,7 +127,7 @@
 .icon_edit_image_app {
   display: none;
 
-  @include breakpoints.devices(xs) {
+  @include breakpoints.devices(sm) {
     display: block;
     position: absolute;
     right: 35%;
@@ -132,7 +138,7 @@
 .icon_question_app {
   display: none;
 
-  @include breakpoints.devices(xs) {
+  @include breakpoints.devices(sm) {
     display: block;
     position: absolute;
     right: 28%;
@@ -170,7 +176,7 @@
   padding-top: 32px;
   gap: 16px;
 
-  @include breakpoints.devices(xs) {
+  @include breakpoints.devices(sm) {
     gap: 12px;
     padding-top: 24px;
   }
@@ -192,7 +198,7 @@
     padding: 12px 98.5px;
     cursor: pointer;
 
-    @include breakpoints.devices(xs) {
+    @include breakpoints.devices(sm) {
       padding: 12px 55px;
     }
   }
@@ -207,6 +213,10 @@
     line-height: 20px;
     padding: 12px 98.5px;
     cursor: pointer;
+
+    @include breakpoints.devices(sm) {
+      padding: 12px 49px;
+    }
   }
   .btn_create_disable {
     border: 1px solid var(--stroke-gray-disable, #e2e2e2);
@@ -220,7 +230,7 @@
     padding: 12px 98.5px;
     cursor: not-allowed;
 
-    @include breakpoints.devices(xs) {
+    @include breakpoints.devices(sm) {
       padding: 12px 48px;
     }
   }
@@ -236,7 +246,7 @@
     border: 1px solid var(--stroke-gray-default, #dbdbdb);
     background: none;
 
-    @include breakpoints.devices(xs) {
+    @include breakpoints.devices(sm) {
       padding: 12px 47.5px;
     }
   }
@@ -244,4 +254,35 @@
 
 .custom_class_message {
   border-radius: 4px;
+}
+
+.input_enter_name {
+  border-radius: 8px;
+  border: 1px solid var(--stroke-gray-default, #dbdbdb);
+  background: var(--fill-white, #fff);
+  color: var(--text-gray-default-weak, #8f8f8f);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.input_enter_desc {
+  border-radius: 8px;
+  border: 1px solid var(--stroke-gray-default, #dbdbdb);
+  background: var(--fill-white, #fff);
+  color: var(--text-gray-default-weak, #8f8f8f);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  padding: 8px 12px;
+}
+
+.modal_footer_delete {
+  @include breakpoints.devices(sm) {
+    padding-top: 32px;
+  }
 }

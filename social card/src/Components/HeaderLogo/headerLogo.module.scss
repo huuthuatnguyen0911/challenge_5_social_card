@@ -9,7 +9,7 @@
     display: none;
   }
 
-  @include breakpoints.devices(xs) {
+  @include breakpoints.devices(sm) {
     padding-top: 0px;
     padding-bottom: 24px;
     .headerLogo__logo {
@@ -32,7 +32,7 @@
 }
 
 .container {
-  @include breakpoints.devices(xs) {
+  @include breakpoints.devices(sm) {
     display: flex;
     padding: 0 17.5px;
     justify-content: space-between;

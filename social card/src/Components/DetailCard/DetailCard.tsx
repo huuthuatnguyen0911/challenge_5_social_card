@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { format } from 'date-fns'
@@ -39,10 +38,14 @@ export default function DetailCard(props: Props) {
   const [checked, setChecked] = useState(false)
   const [nameComment, setNameComment] = useState('')
   const [contentComment, setContentComment] = useState('')
-  const isDisable: boolean = (!checked && nameComment.length === 0) || contentComment.length === 0
+  const isDisable: boolean =
+    (!checked && nameComment.length === 0) ||
+    contentComment.length === 0 ||
+    contentComment.length > 50 ||
+    (!checked && nameComment.length > 50)
+
   const [currentPage, setCurrentPage] = useState(1)
   const commentsPerPage = 5
-
   const indexOfLastComment = currentPage * commentsPerPage
   const currentComments = detailCard?.comments.slice(0, indexOfLastComment)
 
@@ -94,7 +97,7 @@ export default function DetailCard(props: Props) {
   return (
     <>
       <Drawer
-        {...(window.innerWidth < 400
+        {...(window.innerWidth < 600
           ? { title: 'Details', closable: true, closeIcon: <ArrowLeftOutlined />, width: 400 }
           : { closable: false })}
         width={604}
@@ -172,16 +175,15 @@ export default function DetailCard(props: Props) {
           <form onSubmit={handleSubmit}>
             <div className={styles.form_comment} style={{ textAlign: 'left' }}>
               <div className={styles.checkbox_comment}>
-                <input type='checkbox' name='' checked={checked} onChange={handleChangeCheckbox} />
+                <input type='checkbox' name='' id='checkbox_1' checked={checked} onChange={handleChangeCheckbox} />
                 <span>Comment as Unknown</span>
               </div>
               <div className={styles.input_content}>
                 <Input
                   value={nameComment}
                   onChange={handleChangeName}
-                  maxLength={50}
                   autoComplete='true'
-                  status={nameComment.length == 50 ? 'error' : ''}
+                  status={nameComment.length > 50 ? 'error' : ''}
                   className={`${styles.form_comment_input} ${checked ? styles.form_comment_input_disable : ''}`}
                   type='text'
                   placeholder='Your name'
@@ -195,11 +197,10 @@ export default function DetailCard(props: Props) {
                 <Input
                   value={contentComment}
                   onChange={handleChangeContent}
-                  maxLength={50}
                   className={styles.form_comment_input}
                   type='text'
                   placeholder='Type your comment here'
-                  status={contentComment.length == 50 ? 'error' : ''}
+                  status={contentComment.length > 50 ? 'error' : ''}
                   onKeyPress={(event) => {
                     if (event.key === ' ' && contentComment.length === 0) {
                       event.preventDefault()

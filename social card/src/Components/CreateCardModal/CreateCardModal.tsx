@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useState } from 'react'
-import { Button, Modal, message, Tooltip } from 'antd'
+import React, { useState } from 'react'
+import { Modal, Tooltip, Input } from 'antd'
 import styles from './createModal.module.scss'
 import img_add from '../../assets/img_add_card.svg'
-import { Flex, Input } from 'antd'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Cards } from '~/@type/cards.type'
@@ -97,11 +95,6 @@ export default function CreateCardModal(props: Props) {
     setInputValueDescEdit(newValue)
     editCard(currentCards?.name as string, newValue, currentCards?.url as string)
   }
-  // const onChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   console.log(e.target.files ? e.target.files[0] : 'hỏng')
-  //   setImage(e.target.files ? e.target.files[0] : null)
-  // }
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
@@ -146,9 +139,19 @@ export default function CreateCardModal(props: Props) {
     setImage(null)
   }
 
-  const isDisabled: boolean = inputValueName.length === 0 || inputValueDesc.length === 0 || image === null
+  const isDisabled: boolean =
+    inputValueName.length === 0 ||
+    inputValueDesc.length === 0 ||
+    image === null ||
+    inputValueName.length > 50 ||
+    inputValueDesc.length > 200
+
   const isDisabledEdit: boolean =
-    currentCards?.description.length === 0 || currentCards?.name.length === 0 || (image === null && !currentCards?.url)
+    currentCards?.description.length === 0 ||
+    currentCards?.name.length === 0 ||
+    (image === null && !currentCards?.url) ||
+    (currentCards?.description.length as number) > 200 ||
+    (currentCards?.name.length as number) > 50
   const defaultImage: boolean = (image &&
     image?.size < 1024 * 1024 &&
     ['image/png', 'image/jpeg', 'image/svg+xml'].includes(image.type)) as boolean
@@ -201,9 +204,8 @@ export default function CreateCardModal(props: Props) {
                     ) : (
                       <>
                         <Tooltip
-                          placement='right'
-                          {...(window.innerWidth > 400
-                            ? { title: "Please use a square image that's less than 5MB." }
+                          {...(window.innerWidth > 600
+                            ? { placement: 'right', title: "Please use a square image that's less than 5MB." }
                             : '')}
                         >
                           <img src={img_add} alt='_blank' />
@@ -222,8 +224,9 @@ export default function CreateCardModal(props: Props) {
                     />
                   ) : (
                     <Tooltip
-                      placement='top'
-                      {...(window.innerWidth < 400 ? { title: "Please use a square image that's less than 5MB." } : '')}
+                      {...(window.innerWidth < 600
+                        ? { placement: 'top', title: "Please use a square image that's less than 5MB." }
+                        : '')}
                     >
                       <img src={icon_question_app} className={styles.icon_question_app} alt='_blank' />
                     </Tooltip>
@@ -237,10 +240,10 @@ export default function CreateCardModal(props: Props) {
                   </div>
 
                   <Input
+                    className={styles.input_enter_name}
                     autoComplete='true'
                     value={inputValueName}
-                    status={inputValueName.length == 50 ? 'error' : ''}
-                    maxLength={50}
+                    status={inputValueName.length > 50 ? 'error' : ''}
                     onChange={onChangeName}
                     placeholder='Enter your name'
                     style={{ padding: 12, resize: 'none' }}
@@ -260,8 +263,8 @@ export default function CreateCardModal(props: Props) {
 
                   <TextArea
                     value={inputValueDesc}
-                    status={inputValueDesc.length == 200 ? 'error' : ''}
-                    maxLength={200}
+                    status={inputValueDesc.length > 200 ? 'error' : ''}
+                    className={styles.input_enter_desc}
                     onChange={onChangeDesc}
                     placeholder='Type description here'
                     style={{ resize: 'none', height: 96 }}
@@ -298,7 +301,6 @@ export default function CreateCardModal(props: Props) {
           closeIcon={false}
           footer={null}
           zIndex={1001}
-          // getContainer={() => document.body}
         >
           <div className={styles.container}>
             <div className={styles.modal_title}>Edit Card</div>
@@ -325,10 +327,14 @@ export default function CreateCardModal(props: Props) {
                         <img src={icon_edit_image_app} className={styles.icon_edit_image_app} alt='_blank' />
                       </>
                     ) : (defaultImage as boolean) ? (
-                      <img className={styles.img_upload} src={image ? URL.createObjectURL(image) : ''} alt='img' />
+                      <>
+                        {' '}
+                        <img className={styles.img_upload} src={image ? URL.createObjectURL(image) : ''} alt='img' />
+                        <img src={icon_edit_image_app} className={styles.icon_edit_image_app} alt='_blank' />
+                      </>
                     ) : (
                       <>
-                        <img className={styles.img_upload} src={img_add} alt='img' />
+                        <img src={img_add} alt='img' />
                         <br />
                         <span className={styles.btn_upload}>Upload image</span>
                       </>
@@ -343,8 +349,17 @@ export default function CreateCardModal(props: Props) {
                         alt='_blank'
                       />
                     </>
+                  ) : image ? (
+                    <>
+                      <img
+                        onClick={() => hanledEditImageAddCard()}
+                        className={styles.icon_delete_image}
+                        src={icon_delete_image}
+                        alt='_blank'
+                      />
+                    </>
                   ) : (
-                    <></>
+                    ''
                   )}
                 </div>
 
@@ -356,8 +371,8 @@ export default function CreateCardModal(props: Props) {
 
                   <Input
                     value={currentCards?.name}
-                    status={inputValueNameEdit.length == 50 ? 'error' : ''}
-                    maxLength={50}
+                    status={inputValueNameEdit.length > 50 ? 'error' : ''}
+                    className={styles.input_enter_name}
                     onChange={onChangeNameEdit}
                     placeholder='Enter your name'
                     style={{ padding: 12, resize: 'none' }}
@@ -377,8 +392,8 @@ export default function CreateCardModal(props: Props) {
 
                   <TextArea
                     value={currentCards?.description}
-                    status={inputValueDescEdit.length == 200 ? 'error' : ''}
-                    maxLength={200}
+                    status={inputValueDescEdit.length > 200 ? 'error' : ''}
+                    className={styles.input_enter_desc}
                     onChange={onChangeDescEdit}
                     placeholder='Type description here'
                     style={{ resize: 'none', height: 96 }}
@@ -418,7 +433,7 @@ export default function CreateCardModal(props: Props) {
           <div className={styles.container}>
             <div className={styles.modal_title_delete}>Delete card?</div>
             <p className={styles.p_title_delete}>You will not be able to restore the card after taking this action.</p>
-            <div className={styles.modal_footer}>
+            <div className={`${styles.modal_footer} ${styles.modal_footer_delete}`}>
               <button className={styles.btn_delete} onClick={() => delelteCard(currentCards?.id as string)}>
                 Delete
               </button>
