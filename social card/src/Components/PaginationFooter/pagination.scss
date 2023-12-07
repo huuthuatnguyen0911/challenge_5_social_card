@@ -64,17 +64,17 @@
   }
 }
 
-:where(.css-dev-only-do-not-override-zcfrx9) a {
+:where(.css-zcfrx9) a {
   color: #8e4ec6;
 }
-:where(.css-dev-only-do-not-override-2q8sxy) a {
+:where(.css-2q8sxy) a {
   color: #8e4ec6;
 }
-:where(.css-dev-only-do-not-override-zcfrx9) a[disabled] {
+:where(.css-zcfrx9) a[disabled] {
   color: var(--sixth-color);
 }
 
-:where(.css-dev-only-do-not-override-zcfrx9) a[disabled] > img {
+:where(.css-zcfrx9) a[disabled] > img {
   filter: invert(67%) sepia(2%) saturate(6%) hue-rotate(326deg) brightness(92%) contrast(96%);
 }
 
