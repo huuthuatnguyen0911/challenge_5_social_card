@@ -155,7 +155,7 @@ export default function CreateCardModal(props: Props) {
   const defaultImage: boolean = (image &&
     image?.size < 1024 * 1024 * 5 &&
     ['image/png', 'image/jpeg', 'image/svg+xml'].includes(image.type)) as boolean
-  if (image && image?.size > 1024 * 1024 *5) {
+  if (image && image?.size > 1024 * 1024 * 5) {
     toast.error('This file is too large.')
     setImage(null)
   }
@@ -248,7 +248,11 @@ export default function CreateCardModal(props: Props) {
                     placeholder='Enter your name'
                     style={{ padding: 12, resize: 'none' }}
                     onKeyPress={(event) => {
-                      if (/[0-9]/.test(event.key)) {
+                      if (
+                        /[0-9]/.test(event.key) ||
+                        /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(event.key) ||
+                        (event.key === ' ' && inputValueName.length === 0)
+                      ) {
                         event.preventDefault()
                       }
                     }}
@@ -371,13 +375,18 @@ export default function CreateCardModal(props: Props) {
 
                   <Input
                     value={currentCards?.name}
+                    autoComplete='true'
                     status={inputValueNameEdit.length > 50 ? 'error' : ''}
                     className={styles.input_enter_name}
                     onChange={onChangeNameEdit}
                     placeholder='Enter your name'
                     style={{ padding: 12, resize: 'none' }}
                     onKeyPress={(event) => {
-                      if (/[0-9]/.test(event.key)) {
+                      if (
+                        /[0-9]/.test(event.key) ||
+                        /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(event.key) ||
+                        (event.key === ' ' && inputValueNameEdit.length === 0)
+                      ) {
                         event.preventDefault()
                       }
                     }}

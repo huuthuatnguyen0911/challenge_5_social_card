@@ -83,10 +83,16 @@ export default function CreateSearchInput(props: Props) {
             }}
           >
             <Input
-              {...(window.innerWidth < 600 ? { prefix: <SearchOutlined style={{marginInlineEnd:8, fontSize:20}} /> } : { prefix: null })}
+              {...(window.innerWidth < 600
+                ? { prefix: <SearchOutlined style={{ marginInlineEnd: 8, fontSize: 20 }} /> }
+                : { prefix: null })}
               value={searchText}
               onKeyPress={(event) => {
-                if (/[0-9]/.test(event.key)) {
+                if (
+                  /[0-9]/.test(event.key) ||
+                  /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(event.key) ||
+                  (event.key === ' ' && searchText.length === 0)
+                ) {
                   event.preventDefault()
                 }
               }}
@@ -101,7 +107,7 @@ export default function CreateSearchInput(props: Props) {
             htmlType='submit'
             className={styles.button_search}
             style={{ width: 'auto', height: 44 }}
-            icon={<SearchOutlined style={{padding:12, fontSize:20}} className={styles.icon_search} />}
+            icon={<SearchOutlined style={{ padding: 12, fontSize: 20 }} className={styles.icon_search} />}
           />
         </form>
       </div>

@@ -189,7 +189,11 @@ export default function DetailCard(props: Props) {
                   placeholder='Your name'
                   disabled={checked}
                   onKeyPress={(event) => {
-                    if (/[0-9]/.test(event.key)) {
+                    if (
+                      /[0-9]/.test(event.key) ||
+                      /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(event.key) ||
+                      (event.key === ' ' && nameComment.length === 0)
+                    ) {
                       event.preventDefault()
                     }
                   }}
