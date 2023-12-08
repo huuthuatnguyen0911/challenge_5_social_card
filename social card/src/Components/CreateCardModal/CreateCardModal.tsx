@@ -153,9 +153,9 @@ export default function CreateCardModal(props: Props) {
     (currentCards?.description.length as number) > 200 ||
     (currentCards?.name.length as number) > 50
   const defaultImage: boolean = (image &&
-    image?.size < 1024 * 1024 &&
+    image?.size < 1024 * 1024 * 5 &&
     ['image/png', 'image/jpeg', 'image/svg+xml'].includes(image.type)) as boolean
-  if (image && image?.size > 1024 * 1024) {
+  if (image && image?.size > 1024 * 1024 *5) {
     toast.error('This file is too large.')
     setImage(null)
   }

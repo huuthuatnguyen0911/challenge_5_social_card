@@ -136,7 +136,16 @@ export default function CardList(props: Props) {
                 min={1}
                 max={Math.ceil(cards.length / 10)}
                 value={currentPage}
-                onChange={(e) => setCurrentPage(parseInt(e.target.value, 10))}
+                onChange={(e) => {
+                  let value = parseInt(e.target.value)
+                  if (value > Math.ceil(cards.length / 10)) {
+                    setCurrentPage(Math.ceil(cards.length / 10))
+                  } else if (value < 1) {
+                    setCurrentPage(1)
+                  } else {
+                    setCurrentPage(value)
+                  }
+                }}
               />
               &nbsp;of {Math.ceil(cards.length / 10)}
             </span>

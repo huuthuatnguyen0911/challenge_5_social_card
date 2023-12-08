@@ -61,7 +61,7 @@ export default function CreateSearchInput(props: Props) {
             options={historySearch.slice(0, 5).map((item) => ({ value: item.searchText }))}
             maxLength={50}
             filterOption={(inputValue, option) => option!.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
-            notFoundContent={<span className={styles.no_result}>No result</span>}
+            notFoundContent={searchText.length > 0 ? <span className={styles.no_result}>No result</span> : null}
             optionRender={(option) => {
               return (
                 <span style={{ display: 'flex', justifyContent: 'space-between' }}>
