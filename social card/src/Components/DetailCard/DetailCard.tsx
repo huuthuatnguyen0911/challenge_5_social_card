@@ -40,7 +40,7 @@ export default function DetailCard(props: Props) {
   const [contentComment, setContentComment] = useState('')
   const isDisable: boolean =
     (!checked && nameComment.length === 0) ||
-    contentComment.length === 0 ||
+    contentComment.trim().length === 0 ||
     contentComment.length > 50 ||
     (!checked && nameComment.length > 50)
 
@@ -98,7 +98,7 @@ export default function DetailCard(props: Props) {
     <>
       <Drawer
         {...(window.innerWidth < 600
-          ? { title: 'Details', closable: true, closeIcon: <ArrowLeftOutlined />, width: 400 }
+          ? { title: 'Details', closable: true, closeIcon: <ArrowLeftOutlined style={{ width: '24px', height: '24px' }} />, width: 400 }
           : { closable: false })}
         width={604}
         onClose={closeDetailCard}
@@ -188,10 +188,13 @@ export default function DetailCard(props: Props) {
                   type='text'
                   placeholder='Your name'
                   disabled={checked}
+                  onPaste={(event) => {
+                    event.preventDefault()
+                  }}
                   onKeyPress={(event) => {
                     if (
                       /[0-9]/.test(event.key) ||
-                      /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(event.key) ||
+                      /["'`!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(event.key) ||
                       (event.key === ' ' && nameComment.length === 0)
                     ) {
                       event.preventDefault()
@@ -205,11 +208,14 @@ export default function DetailCard(props: Props) {
                   type='text'
                   placeholder='Type your comment here'
                   status={contentComment.length > 50 ? 'error' : ''}
-                  onKeyPress={(event) => {
-                    if (event.key === ' ' && contentComment.length === 0) {
-                      event.preventDefault()
-                    }
+                  onPaste={(event) => {
+                    event.preventDefault()
                   }}
+                  // onKeyPress={(event) => {
+                  //   if (event.key === ' ' && contentComment.length === 0) {
+                  //     event.preventDefault()
+                  //   }
+                  // }}
                 />
               </div>
               <button

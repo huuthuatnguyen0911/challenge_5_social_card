@@ -199,6 +199,13 @@
     cursor: pointer;
 
     @include breakpoints.devices(sm) {
+      padding: 12px 48px;
+    }
+  }
+  .btn_save {
+    padding: 12px 105.5px;
+
+    @include breakpoints.devices(sm) {
       padding: 12px 55px;
     }
   }
@@ -211,7 +218,7 @@
     font-style: normal;
     font-weight: 500;
     line-height: 20px;
-    padding: 12px 98.5px;
+    padding: 12px 99.5px;
     cursor: pointer;
 
     @include breakpoints.devices(sm) {

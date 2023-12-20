@@ -8,7 +8,7 @@ export default function HeaderLogo(props: Props) {
   return (
     <div className={styles.headerLogo}>
       <div className={styles.container}>
-        <a href='#'>
+        <a href='/'>
           <img className={styles.headerLogo__logo} src={logo} alt='header logo' />
         </a>
         <button className={styles.btn_header} id={styles.add_task} onClick={() => openModal('add', '')}>

@@ -19,7 +19,7 @@ export default function CreateSearchInput(props: Props) {
   const { openModal, handleChangedSearchText, searchText, searchCard, cards, historySearch, deleteHistorySearch } =
     props
 
-  const handleSubmut = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     searchCard(cards, searchText)
   }
@@ -56,7 +56,7 @@ export default function CreateSearchInput(props: Props) {
       </button>
 
       <div className={styles.search_input}>
-        <form onSubmit={handleSubmut}>
+        <form onSubmit={handleSubmit}>
           <AutoComplete
             options={historySearch.slice(0, 5).map((item) => ({ value: item.searchText }))}
             maxLength={50}
@@ -64,7 +64,7 @@ export default function CreateSearchInput(props: Props) {
             notFoundContent={searchText.length > 0 ? <span className={styles.no_result}>No result</span> : null}
             optionRender={(option) => {
               return (
-                <span style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ display: 'flex', justifyContent: 'space-between'}}>
                   <span>{renderOption(searchText, option)}</span>
                   <Button
                     size='small'
@@ -84,13 +84,19 @@ export default function CreateSearchInput(props: Props) {
           >
             <Input
               {...(window.innerWidth < 600
-                ? { prefix: <SearchOutlined style={{ marginInlineEnd: 8, fontSize: 20 }} /> }
+                ? {
+                    prefix: (
+                      <Button htmlType='submit' style={{ padding: '0px', border: 'none', boxShadow: 'none' }}>
+                        <SearchOutlined style={{ marginInlineEnd: 8, fontSize: 20 }} />
+                      </Button>
+                    )
+                  }
                 : { prefix: null })}
               value={searchText}
               onKeyPress={(event) => {
                 if (
                   /[0-9]/.test(event.key) ||
-                  /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(event.key) ||
+                  /['"`!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(event.key) ||
                   (event.key === ' ' && searchText.length === 0)
                 ) {
                   event.preventDefault()
@@ -98,6 +104,7 @@ export default function CreateSearchInput(props: Props) {
               }}
               className={styles.input}
               maxLength={50}
+              status={searchText.length > 50 ? 'error' : ''}
               style={{ width: 364, height: 44, padding: 12 }}
               placeholder='Search..'
               onChange={handleChangedSearchText}

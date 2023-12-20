@@ -38,6 +38,7 @@ export default function LayoutSocial() {
     const cardString = localStorage.getItem('cards')
     if (!cardString) {
       setCards(cardListDefault)
+      localStorage.setItem('cards', JSON.stringify(cardListDefault))
     } else {
       const cardObject: Cards[] = cardString ? JSON.parse(cardString) : []
       setCards(cardObject)
@@ -92,7 +93,6 @@ export default function LayoutSocial() {
       reactions: 0
     }
     setCards((prev) => [card, ...prev])
-
     syncReactToLocal(handler)
   }
   const startEditCard = (id: string) => {

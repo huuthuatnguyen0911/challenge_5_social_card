@@ -67,11 +67,18 @@
 :where(.css-zcfrx9) a {
   color: #8e4ec6;
 }
+
 :where(.css-2q8sxy) a {
   color: #8e4ec6;
 }
+
+// :where(.css-2q8sxy) a[disabled] {
+//   color: var(--sixth-color);
+// }
+
 :where(.css-zcfrx9) a[disabled] {
-  color: var(--sixth-color);
+    color: rgba(0, 0, 0, 0.25);
+    cursor: not-allowed;
 }
 
 :where(.css-zcfrx9) a[disabled] > img {

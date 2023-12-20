@@ -59,6 +59,7 @@
   @include breakpoints.devices(sm) {
     max-width: 94px;
     height: 94px;
+    margin-right: 16px;
   }
 }
 .card_body {
@@ -80,6 +81,10 @@
     font-style: normal;
     font-weight: 600;
     line-height: 26px;
+
+    @include breakpoints.devices(sm) {
+      padding-bottom: 4px;
+    }
   }
 
   .card_description {
@@ -94,7 +99,7 @@
 }
 
 .border_top {
-  border-top: 1px solid #e6e6e6;
+  border-top: 1px solid var(--stroke-gray-default, #dbdbdb);
   margin-top: 16px;
   margin-bottom: 12px;
 }
@@ -113,14 +118,22 @@
   .span_purple {
     color: var(--text-primary-default, #8e4ec6);
   }
+
+  span {
+    color: var(--text-gray-default, #3b3b3b);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
 }
 
 .dropdown_content {
-  display: none;
   position: absolute;
   right: 0;
-  right: 20px;
-  top: 36px;
+  right: -1px;
+  top: -10px;
   background: var(--background-white, #fff);
   min-width: 194px;
   z-index: 1;
@@ -206,4 +219,9 @@
   @include breakpoints.devices(sm) {
     display: none;
   }
+}
+
+.bg_icon_more {
+  border-radius: var(--xs, 4px);
+  background: var(--fill-gray-hover-weak, #f3f3f3);
 }

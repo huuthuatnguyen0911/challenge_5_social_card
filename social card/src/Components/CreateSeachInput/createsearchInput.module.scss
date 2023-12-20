@@ -38,7 +38,11 @@
 
   @include breakpoints.devices(sm) {
     margin-right: 0px;
-    width: 360px !important;
+    width: 356px !important;
+  }
+
+  @media screen and (width: 414px) {
+    width: 370px !important;
   }
 }
 

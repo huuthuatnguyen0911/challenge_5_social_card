@@ -1,17 +1,19 @@
-import React, { useState } from 'react'
-import { Modal, Tooltip, Input } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { Modal, Tooltip, Input, message } from 'antd'
 import styles from './createModal.module.scss'
 import img_add from '../../assets/img_add_card.svg'
-import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Cards } from '~/@type/cards.type'
 import icon_delete_image from '../../assets/icon_delete_image.svg'
 import icon_edit_image_fill from '../../assets/icon_edit_image_fill.svg'
 import icon_edit_image_app from '../../assets/icon_edit_image_app.svg'
 import icon_question_app from '../../assets/icon_question_app.svg'
+import errorIcon from '../../assets/img_err_warning.svg'
+import checkFill from '../../assets/img_check_fill.svg'
+import { EMOJI_REGEX } from '~/constants'
+import '../custom_antd.scss'
 
 const { TextArea } = Input
-
 interface Props {
   isOpen: boolean
   closeModal: () => void
@@ -42,7 +44,27 @@ export default function CreateCardModal(props: Props) {
   const [inputValueDescEdit, setInputValueDescEdit] = useState('')
   const [image, setImage] = useState<File | null>(null)
   const [, setUrl] = useState('')
+  const [disableButtonAdd, setDisableButtonAdd] = useState(false)
+  const [messageApi, contextHolder] = message.useMessage()
 
+  const error = () => {
+    messageApi.open({
+      type: 'error',
+      content: 'This file is too large.',
+      className: 'error-message',
+      duration: 3,
+      icon: <img src={errorIcon} alt='error-warning-icon' />
+    })
+  }
+  const success = () => {
+    messageApi.open({
+      type: "success",
+      content: `Successfully create`,
+      className: "success-message",
+      duration: 3,
+      icon: <img src={checkFill}></img>,
+    });
+  };
   const saveImage = async () => {
     const data = new FormData()
     data.append('file', image as File)
@@ -57,16 +79,7 @@ export default function CreateCardModal(props: Props) {
       const cloudData = await res.json()
       setUrl(cloudData.url)
       if (cloudData.url) {
-        toast.success('Successfully create!', {
-          position: 'top-center',
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'colored'
-        })
+        success()
       }
       return cloudData.url
     } catch (error) {
@@ -74,7 +87,7 @@ export default function CreateCardModal(props: Props) {
     }
   }
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    let newValue = e.target.value
+    let newValue = e.target.value.replace(EMOJI_REGEX, '')
     newValue = newValue.charAt(0).toUpperCase() + newValue.slice(1)
     setInputValueName(newValue)
   }
@@ -97,6 +110,7 @@ export default function CreateCardModal(props: Props) {
   }
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setDisableButtonAdd(true)
     try {
       if (currentCards) {
         if (!currentCards.url) {
@@ -126,12 +140,14 @@ export default function CreateCardModal(props: Props) {
       } else {
         const url = await saveImage()
         addCards(inputValueName, inputValueDesc, url)
+        setDisableButtonAdd(false)
         setInputValueName('')
         setInputValueDesc('')
         setImage(null)
         closeModal()
       }
     } catch (error) {
+      setDisableButtonAdd(false)
       console.error('Error while handling form submission:', error)
     }
   }
@@ -140,43 +156,38 @@ export default function CreateCardModal(props: Props) {
   }
 
   const isDisabled: boolean =
-    inputValueName.length === 0 ||
-    inputValueDesc.length === 0 ||
+    inputValueName.trim().length === 0 ||
+    inputValueDesc.trim().length === 0 ||
     image === null ||
     inputValueName.length > 50 ||
     inputValueDesc.length > 200
 
   const isDisabledEdit: boolean =
-    currentCards?.description.length === 0 ||
-    currentCards?.name.length === 0 ||
+    currentCards?.description.trim().length === 0 ||
+    currentCards?.name.trim().length === 0 ||
     (image === null && !currentCards?.url) ||
     (currentCards?.description.length as number) > 200 ||
     (currentCards?.name.length as number) > 50
   const defaultImage: boolean = (image &&
     image?.size < 1024 * 1024 * 5 &&
     ['image/png', 'image/jpeg', 'image/svg+xml'].includes(image.type)) as boolean
-  if (image && image?.size > 1024 * 1024 * 5) {
-    toast.error('This file is too large.')
-    setImage(null)
-  }
+
+  useEffect(() => {
+    if (image && image?.size > 1024 * 1024 * 5) {
+      setImage(null)
+      error()
+    } else if (image && !['image/png', 'image/jpeg', 'image/svg+xml'].includes(image.type)) {
+      setImage(null)
+    }
+  })
+  console.log(image)
+
 
   return (
     <>
-      <ToastContainer
-        position='top-center'
-        autoClose={3000}
-        hideProgressBar
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme='colored'
-      />
-
       {action === 'add' ? (
         <Modal width={594} centered open={isOpen} onCancel={() => closeModal()} closeIcon={false} footer={null}>
+          {contextHolder}
           <div className={styles.container}>
             <div className={styles.modal_title}>Create card</div>
             <form action='' onSubmit={handleSubmit}>
@@ -247,11 +258,13 @@ export default function CreateCardModal(props: Props) {
                     onChange={onChangeName}
                     placeholder='Enter your name'
                     style={{ padding: 12, resize: 'none' }}
+                    onPaste={(event) => event.preventDefault()}
                     onKeyPress={(event) => {
                       if (
                         /[0-9]/.test(event.key) ||
-                        /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(event.key) ||
-                        (event.key === ' ' && inputValueName.length === 0)
+                        /["'!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(event.key) ||
+                        (event.key === ' ' && inputValueName.length === 0) ||
+                        /\p{Emoji}/u.test(event.key)
                       ) {
                         event.preventDefault()
                       }
@@ -272,24 +285,25 @@ export default function CreateCardModal(props: Props) {
                     onChange={onChangeDesc}
                     placeholder='Type description here'
                     style={{ resize: 'none', height: 96 }}
-                    onKeyPress={(event) => {
-                      if (event.key === ' ' && inputValueDesc.length === 0) {
-                        event.preventDefault()
-                      }
-                    }}
+                    onPaste={(event) => event.preventDefault()}
+                    // onKeyPress={(event) => {
+                    //   if (event.key === ' ' && inputValueDesc.length === 0) {
+                    //     event.preventDefault()
+                    //   }
+                    // }}
                   />
                 </div>
               </div>
               <div className={styles.modal_footer}>
                 <button
-                  disabled={isDisabled}
+                  disabled={disableButtonAdd ? disableButtonAdd : isDisabled}
                   type='submit'
                   className={isDisabled ? styles.btn_create_disable : styles.btn_create}
                 >
                   Create
                 </button>
                 <span onClick={closeModal} className={styles.btn_cancel}>
-                  Cancle
+                  Cancel
                 </span>
               </div>
             </form>
@@ -306,6 +320,7 @@ export default function CreateCardModal(props: Props) {
           footer={null}
           zIndex={1001}
         >
+          {contextHolder}
           <div className={styles.container}>
             <div className={styles.modal_title}>Edit Card</div>
             <form action='' onSubmit={handleSubmit}>
@@ -332,7 +347,6 @@ export default function CreateCardModal(props: Props) {
                       </>
                     ) : (defaultImage as boolean) ? (
                       <>
-                        {' '}
                         <img className={styles.img_upload} src={image ? URL.createObjectURL(image) : ''} alt='img' />
                         <img src={icon_edit_image_app} className={styles.icon_edit_image_app} alt='_blank' />
                       </>
@@ -381,10 +395,11 @@ export default function CreateCardModal(props: Props) {
                     onChange={onChangeNameEdit}
                     placeholder='Enter your name'
                     style={{ padding: 12, resize: 'none' }}
+                    onPaste={(event) => event.preventDefault()}
                     onKeyPress={(event) => {
                       if (
                         /[0-9]/.test(event.key) ||
-                        /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(event.key) ||
+                        /['"`!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(event.key) ||
                         (event.key === ' ' && inputValueNameEdit.length === 0)
                       ) {
                         event.preventDefault()
@@ -406,11 +421,12 @@ export default function CreateCardModal(props: Props) {
                     onChange={onChangeDescEdit}
                     placeholder='Type description here'
                     style={{ resize: 'none', height: 96 }}
-                    onKeyPress={(event) => {
-                      if (event.key === ' ' && inputValueDescEdit.length === 0) {
-                        event.preventDefault()
-                      }
-                    }}
+                    onPaste={(event) => event.preventDefault()}
+                    // onKeyPress={(event) => {
+                    //   if (event.key === ' ' && inputValueDescEdit.length === 0) {
+                    //     event.preventDefault()
+                    //   }
+                    // }}
                   />
                 </div>
               </div>
@@ -418,12 +434,12 @@ export default function CreateCardModal(props: Props) {
                 <button
                   disabled={isDisabledEdit}
                   type='submit'
-                  className={isDisabledEdit ? styles.btn_create_disable : styles.btn_create}
+                  className={`${isDisabledEdit ? styles.btn_create_disable : styles.btn_create} ${styles.btn_save}`}
                 >
                   Save
                 </button>
                 <span onClick={closeModal} className={styles.btn_cancel}>
-                  Cancle
+                  Cancel
                 </span>
               </div>
             </form>
@@ -447,7 +463,7 @@ export default function CreateCardModal(props: Props) {
                 Delete
               </button>
               <span onClick={closeModal} className={styles.btn_cancel}>
-                Cancle
+                Cancel
               </span>
             </div>
           </div>
