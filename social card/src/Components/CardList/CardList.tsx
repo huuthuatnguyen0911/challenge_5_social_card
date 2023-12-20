@@ -1,5 +1,5 @@
 import styles from './cardList.module.scss'
-import { Col, Row, Pagination, PaginationProps, Input, Popover, Button } from 'antd'
+import { Col, Row, Pagination, PaginationProps, Input, Popover } from 'antd'
 import icon_more from '../../assets/icon_more.svg'
 import icon_heart from '../../assets/icon_heart.svg'
 import icon_comment from '../../assets/icon_comment.svg'
@@ -11,7 +11,7 @@ import arrowLeftIcon from '../../assets/icon_arrow_left.svg'
 import arrowRightIcon from '../../assets/icon_arrow_right.svg'
 import '../custom_antd.scss'
 import '../PaginationFooter/pagination.scss'
-import { useState, useRef, useEffect } from 'react'
+import { useState } from 'react'
 
 interface Props {
   cards: Cards[]
