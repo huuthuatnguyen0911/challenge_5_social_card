@@ -71,11 +71,12 @@
   }
 
   .card_title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     padding-top: 12px;
     padding-bottom: 8px;
-    overflow: hidden;
     color: var(--text-gray-default, #3b3b3b);
-    text-overflow: ellipsis;
     font-family: Inter;
     font-size: 20px;
     font-style: normal;
@@ -85,6 +86,7 @@
     @include breakpoints.devices(sm) {
       padding-bottom: 4px;
     }
+
   }
 
   .card_description {

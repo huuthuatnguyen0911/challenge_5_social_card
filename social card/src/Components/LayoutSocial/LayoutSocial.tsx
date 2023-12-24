@@ -44,7 +44,6 @@ export default function LayoutSocial() {
       setCards(cardObject)
     }
   }, [])
-
   const hanledClickComment = () => {
     setFormComment(true)
   }
@@ -250,7 +249,6 @@ export default function LayoutSocial() {
       const cardObject: Cards[] = cardString ? JSON.parse(cardString) : []
       setCards(cardObject)
     }
-    console.log(e.target.value)
   }
   const searchCard = (cards: Cards[], searchText: string) => {
     if (searchText && !historySearch.some((item) => item.searchText === searchText)) {

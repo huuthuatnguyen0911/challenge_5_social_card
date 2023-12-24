@@ -141,8 +141,8 @@ export default function CardList(props: Props) {
                         </div>
                       }
                       trigger='hover'
-                      visible={hoveredCard === card.id}
-                      onVisibleChange={(visible) => handleHoverChange(card.id, visible)}
+                      open={hoveredCard === card.id}
+                      onOpenChange={(visible) => handleHoverChange(card.id, visible)}
                       placement='bottomRight'
                     >
                       <Popover
@@ -167,8 +167,8 @@ export default function CardList(props: Props) {
                           </div>
                         }
                         trigger='click'
-                        visible={clickedCard === card.id}
-                        onVisibleChange={(visible) => handleClickChange(card.id, visible)}
+                        open={clickedCard === card.id}
+                        onOpenChange={(visible) => handleClickChange(card.id, visible)}
                         placement='bottomRight'
                       >
                         <img

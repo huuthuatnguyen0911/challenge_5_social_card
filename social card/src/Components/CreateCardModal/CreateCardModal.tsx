@@ -180,8 +180,6 @@ export default function CreateCardModal(props: Props) {
       setImage(null)
     }
   })
-  console.log(image)
-
 
   return (
     <>

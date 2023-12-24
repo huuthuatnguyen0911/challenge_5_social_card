@@ -120,5 +120,10 @@ textarea:where(.css-2q8sxy).ant-input {
 }
 
 :where(.css-2q8sxy).ant-drawer .ant-drawer-title {
+  color: var(--text-gray-default, #3b3b3b);
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
   font-weight: 500;
+  line-height: 26px;
 }
