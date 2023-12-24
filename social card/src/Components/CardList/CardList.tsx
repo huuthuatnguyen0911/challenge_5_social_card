@@ -38,7 +38,7 @@ export default function CardList(props: Props) {
   const itemRender: PaginationProps['itemRender'] = (_, type, originalElement) => {
     if (type === 'prev') {
       return (
-        <a className='prev'>
+        <a className='prev' style={{alignItems:'center'}}>
           <img src={arrowLeftIcon} alt='arrow-right-icon' />
           <div>Prev</div>
         </a>
@@ -46,7 +46,7 @@ export default function CardList(props: Props) {
     }
     if (type === 'next') {
       return (
-        <a className='next'>
+        <a className='next' style={{alignItems:'center'}}>
           <div>Next</div>
           <img src={arrowRightIcon} alt='arrow-right-icon' />
         </a>
